@@ -1,0 +1,103 @@
+= API CURL Demonstration
+:toc: manual
+
+F5 link:https://clouddocs.f5.com/api/icontrol-rest/[REST API] 设计原则是任何一条 `tmsh` 命令对应一个 `REST` 方法，且
+
+* `tmsh list ltm` 对应 `GET /mgmt/tm/ltm` 
+* `tmsh create ltm` 对应 `GET /mgmt/tm/ltm` 
+* `tmsh modify ltm` 对应 `PATCH /mgmt/tm/ltm` 
+
+有用的表达式：
+
+* `?expandSubcollections=true` 可展开Sub-element
+* `$select` 选择子属性
+* `$filter` 过滤
+
+* 快速开始：https://devcentral.f5.com/s/articles/icontrol-rest-cookbook-24575
+
+== 查看所有 VS
+
+[source, text]
+.*TMSH*
+----
+tmsh list ltm virtual 
+----
+
+[source, json]
+.*API*
+----
+https://10.1.1.133/mgmt/tm/ltm/virtual
+https://10.1.1.133/mgmt/tm/ltm/virtual?expandSubcollections=true
+----
+
+== 查看特定名称 VS
+
+[source, text]
+.*TMSH*
+----
+list ltm virtual vs_test_1
+----
+
+[source, json]
+.*API*
+----
+https://10.1.1.133/mgmt/tm/ltm/virtual/vs_test_1
+https://10.1.1.133/mgmt/tm/ltm/virtual/vs_test_1?expandSubcollections=true
+----
+
+== 查看所有 VS 统计数据
+
+[source, text]
+.*TMSH*
+----
+show ltm virtual
+----
+
+[source, json]
+.*API*
+----
+https://10.1.1.133/mgmt/tm/ltm/virtual/stats
+----
+
+== 查看特定 VS 统计数据
+
+[source, text]
+.*TMSH*
+----
+show ltm virtual vs_test_1
+----
+
+[source, json]
+.*API*
+----
+https://10.1.1.133/mgmt/tm/ltm/virtual/vs_test_1/stats
+----
+
+== 查看 VS 子属性
+
+[source, text]
+.*TMSH*
+----
+list ltm virtual vs_test_2 enabled 
+----
+
+[source, json]
+.*API*
+----
+https://10.1.1.133/mgmt/tm/ltm/virtual/vs_test_1?$select=enabled
+----
+
+== 查看 Pool 及关联的 Member
+
+[source, text]
+.*TMSH*
+----
+list ltm pool
+----
+
+[source, json]
+.*API*
+----
+https://10.1.1.133/mgmt/tm/ltm/pool?expandSubcollections=true
+----
+

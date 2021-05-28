@@ -101,3 +101,31 @@ list ltm pool
 https://10.1.1.133/mgmt/tm/ltm/pool?expandSubcollections=true
 ----
 
+== 停用 VS
+
+[source, text]
+.*TMSH*
+----
+modify ltm virtual vs_test_1 disabled 
+----
+
+[source, json]
+.*API*
+----
+curl -k -u 'admin:admin' https://10.1.1.133/mgmt/tm/ltm/virtual/vs_test_1 -X PATCH -H "Content-Type: application/json" -d '{"disabled": true}'
+----
+
+== 启用 VS
+
+[source, text]
+.*TMSH*
+----
+modify ltm virtual vs_test_1 enabled 
+----
+
+[source, json]
+.*API*
+----
+curl -k -u 'admin:admin' https://10.1.1.133/mgmt/tm/ltm/virtual/vs_test_1 -X PATCH -H "Content-Type: application/json" -d '{"enabled": true}'
+----
+

@@ -129,3 +129,60 @@ modify ltm virtual vs_test_1 enabled
 curl -k -u 'admin:admin' https://10.1.1.133/mgmt/tm/ltm/virtual/vs_test_1 -X PATCH -H "Content-Type: application/json" -d '{"enabled": true}'
 ----
 
+== 停用 Node
+
+[source, text]
+.*TMSH*
+----
+modify ltm node 10.1.20.11 state user-down
+----
+
+[source, json]
+.*API*
+----
+curl -k -u 'admin:admin' https://10.1.1.133/mgmt/tm/ltm/node/10.1.20.11 -X PATCH -H "Content-Type: application/json" -d '{"state": "user-down"}'
+----
+
+== 启用 Node
+
+[source, text]
+.*TMSH*
+----
+modify ltm node 10.1.20.11 state user-up
+----
+
+[source, json]
+.*API*
+----
+curl -k -u 'admin:admin' https://10.1.1.133/mgmt/tm/ltm/node/10.1.20.11 -X PATCH -H "Content-Type: application/json" -d '{"state": "user-up"}'
+----
+
+== 停用Member
+
+[source, text]
+.*TMSH*
+----
+modify ltm pool pool_3 members modify { 10.1.20.15:http { state user-down }}
+----
+
+[source, json]
+.*API*
+----
+curl -k -u 'admin:admin' https://10.1.1.133/mgmt/tm/ltm/pool/pool_3/members/~Common~10.1.20.15:80 -X PATCH -H "Content-Type: application/json" -d '{"state": "user-down"}'
+----
+
+== 启用 Member
+
+[source, text]
+.*TMSH*
+----
+modify ltm pool pool_3 members modify { 10.1.20.15:http { state user-up }}
+----
+
+[source, json]
+.*API*
+----
+curl -k -u 'admin:admin' https://10.1.1.133/mgmt/tm/ltm/pool/pool_3/members/~Common~10.1.20.15:80 -X PATCH -H "Content-Type: application/json" -d '{"state": "user-up"}'
+----
+
+

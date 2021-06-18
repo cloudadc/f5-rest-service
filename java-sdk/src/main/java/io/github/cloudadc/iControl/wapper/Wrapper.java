@@ -1,8 +1,13 @@
 package io.github.cloudadc.iControl.wapper;
 
+import java.io.IOException;
+
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,6 +58,14 @@ public abstract class Wrapper implements iWrapper {
 	public String getBaseURL() {
 		return baseURL;
 	}
+	
+	public void shutdown() {
+		try {
+			client.close();
+		} catch (IOException e) {
+			throw new ApiInvocationException(e);
+		}
+	}
 
 	public static Wrapper create(String hostname, String username, String password) {
 		return new iControlRestWrapper(hostname, username, password);
@@ -62,6 +75,23 @@ public abstract class Wrapper implements iWrapper {
 		HttpGet request = new HttpGet(getBaseURL() + url);
 		request.setHeader(HttpHeaders.ACCEPT, APPLICATION_JSON);
 		request.addHeader(HttpHeaders.USER_AGENT, USER_AGENT);
+		
+		try {
+			try(CloseableHttpResponse response = client.execute(request)) {
+				ObjectMapper om = new ObjectMapper();
+				return om.readValue(response.getEntity().getContent(), valueType);
+			}
+		} catch (Exception e) {
+			throw new ApiInvocationException(e);
+		} 
+	}
+	
+	protected <T> T doPatch(String url, String payload, Class<T> valueType) {
+		HttpPatch request = new HttpPatch(getBaseURL() + url);
+		request.setHeader(HttpHeaders.ACCEPT, APPLICATION_JSON);
+		request.addHeader(HttpHeaders.USER_AGENT, USER_AGENT);
+		request.addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+		request.setEntity(new StringEntity(payload, ContentType.APPLICATION_JSON));
 		
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {

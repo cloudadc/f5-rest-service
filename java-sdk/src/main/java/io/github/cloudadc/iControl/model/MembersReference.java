@@ -2,9 +2,11 @@ package io.github.cloudadc.iControl.model;
 
 import java.util.List;
 
-public class ProfilesReference {
+public class MembersReference {
 
+	public String kind;
 	public String link;
+	public String selfLink;
     public boolean isSubcollection;
-    public List<Profile> items;
+    public List<Member> items;
 }

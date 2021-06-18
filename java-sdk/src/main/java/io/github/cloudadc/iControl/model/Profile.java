@@ -1,6 +1,6 @@
 package io.github.cloudadc.iControl.model;
 
-public class Item {
+public class Profile {
 
 	public String kind;
     public String name;

@@ -14,10 +14,20 @@ public class APP implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		
-		Example_VirtualServer.listAllVirtualServers();
-		Example_VirtualServer.listAllVirtualServersExpandSubcollections();
-		Example_VirtualServer.getVirtualServerByName();
-		Example_VirtualServer.getVirtualServerByNameExpandSubcollections();
+//		Examples.listAllVirtualServers();
+//		Examples.listAllVirtualServersExpandSubcollections();
+//		Examples.getVirtualServerByName();
+//		Examples.getVirtualServerByNameExpandSubcollections();
+//		Examples.listAllNodes();
+//		Examples.getNodeByName();		
+//		Examples.listAllPools();
+//		Examples.listAllPoolsExpandSubcollections();
+//		Examples.getPoolByName();
+//		Examples.getPoolByNameExpandSubcollections();
+//		Examples.listAllMembers();
+//		Examples.getMemberByName();
+//		Examples.nodeEnableFromDiable();
+		Examples.nodeUpFromOffline();
 		
 	}
 	

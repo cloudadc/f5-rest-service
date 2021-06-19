@@ -52,5 +52,13 @@ public interface iWrapper {
 	
 	public Member getMemberByName(String poolName, String memberName);
 	
+	public Member memberDisable(String poolName, String memberName);
+	
+	public Member memberEnable(String poolName, String memberName);
+	
+    public Member memberOffline(String poolName, String memberName);
+	
+	public Member memberUp(String poolName, String memberName);
+	
 
 }

@@ -9,6 +9,8 @@ import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -16,6 +18,8 @@ import io.github.cloudadc.iControl.model.ApiInvocationException;
 
 public abstract class Wrapper implements iWrapper {
 	
+	Logger logger = LoggerFactory.getLogger(Wrapper.class);
+
 	static final String USER_AGENT = "iControl Rest Java JDK"; 
 	static final String APPLICATION_JSON = "application/json";
 
@@ -43,20 +47,24 @@ public abstract class Wrapper implements iWrapper {
 
 	protected abstract CloseableHttpClient initClient();
 
-	public String getHostname() {
+	protected String getHostname() {
 		return hostname;
 	}
 
-	public String getUsername() {
+	protected String getUsername() {
 		return username;
 	}
 
-	public String getPassword() {
+	protected String getPassword() {
 		return password;
 	}
 	
-	public String getBaseURL() {
+	protected String getBaseURL() {
 		return baseURL;
+	}
+	
+	public CloseableHttpClient getClient() {
+		return client;
 	}
 	
 	public void shutdown() {
@@ -75,7 +83,7 @@ public abstract class Wrapper implements iWrapper {
 		HttpGet request = new HttpGet(getBaseURL() + url);
 		request.setHeader(HttpHeaders.ACCEPT, APPLICATION_JSON);
 		request.addHeader(HttpHeaders.USER_AGENT, USER_AGENT);
-		
+		logger.info(request.toString());		
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {
 				ObjectMapper om = new ObjectMapper();
@@ -92,6 +100,7 @@ public abstract class Wrapper implements iWrapper {
 		request.addHeader(HttpHeaders.USER_AGENT, USER_AGENT);
 		request.addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
 		request.setEntity(new StringEntity(payload, ContentType.APPLICATION_JSON));
+		logger.info(request.toString());
 		
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {

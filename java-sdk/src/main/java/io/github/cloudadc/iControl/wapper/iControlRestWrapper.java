@@ -105,22 +105,42 @@ public class iControlRestWrapper extends Wrapper{
 
 	@Override
 	public Node nodeDiable(String nodeName) {
-		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-down\"}", Node.class);
-	}
-
-	@Override
-	public Node nodeEnable(String nodeName) {
-		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-up\"}", Node.class);
-	}
-
-	@Override
-	public Node nodeOffline(String nodeName) {
 		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"session\": \"user-disabled\"}", Node.class);
 	}
 
 	@Override
-	public Node nodeUp(String nodeName) {
+	public Node nodeEnable(String nodeName) {
 		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"session\": \"user-enabled\"}", Node.class);
+	}
+
+	@Override
+	public Node nodeOffline(String nodeName) {
+		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-down\"}", Node.class);
+	}
+
+	@Override
+	public Node nodeUp(String nodeName) {
+		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-up\"}", Node.class);
+	}
+
+	@Override
+	public Member memberDisable(String poolName, String memberName) {
+		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"session\": \"user-disabled\"}", Member.class);
+	}
+
+	@Override
+	public Member memberEnable(String poolName, String memberName) {
+		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"session\": \"user-enabled\"}", Member.class);
+	}
+
+	@Override
+	public Member memberOffline(String poolName, String memberName) {
+		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-down\"}", Member.class);
+	}
+
+	@Override
+	public Member memberUp(String poolName, String memberName) {
+		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-up\"}", Member.class);
 	}
 
 	

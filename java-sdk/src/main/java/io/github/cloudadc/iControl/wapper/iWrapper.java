@@ -6,6 +6,8 @@ import io.github.cloudadc.iControl.model.Node;
 import io.github.cloudadc.iControl.model.NodesReference;
 import io.github.cloudadc.iControl.model.Pool;
 import io.github.cloudadc.iControl.model.PoolsReference;
+import io.github.cloudadc.iControl.model.Transaction;
+import io.github.cloudadc.iControl.model.TransactionReference;
 import io.github.cloudadc.iControl.model.VirtualServer;
 import io.github.cloudadc.iControl.model.VirtualServersReference;
 
@@ -32,13 +34,21 @@ public interface iWrapper {
 	
 	public Node getNodeByName(String nodeName);
 	
-	public Node nodeDiable(String nodeName);
+	public Object nodeDiable(String nodeName);
 	
-	public Node nodeEnable(String nodeName);
+	public Object nodeEnable(String nodeName);
 	
-	public Node nodeOffline(String nodeName);
+	public Object nodeOffline(String nodeName);
 	
-	public Node nodeUp(String nodeName);
+	public Object nodeUp(String nodeName);
+	
+    public Object nodeDiable(String nodeName, long transId);
+	
+	public Object nodeEnable(String nodeName, long transId);
+	
+	public Object nodeOffline(String nodeName, long transId);
+	
+	public Object nodeUp(String nodeName, long transId);
 	
 	public PoolsReference listAllPools();
 	
@@ -52,13 +62,31 @@ public interface iWrapper {
 	
 	public Member getMemberByName(String poolName, String memberName);
 	
-	public Member memberDisable(String poolName, String memberName);
+	public Object memberDisable(String poolName, String memberName);
 	
-	public Member memberEnable(String poolName, String memberName);
+	public Object memberEnable(String poolName, String memberName);
 	
-    public Member memberOffline(String poolName, String memberName);
+    public Object memberOffline(String poolName, String memberName);
 	
-	public Member memberUp(String poolName, String memberName);
+	public Object memberUp(String poolName, String memberName);
+	
+    public Object memberDisable(String poolName, String memberName, long transId);
+	
+	public Object memberEnable(String poolName, String memberName, long transId);
+	
+    public Object memberOffline(String poolName, String memberName, long transId);
+	
+	public Object memberUp(String poolName, String memberName, long transId);
+	
+	public Transaction transactionStart();
+	
+	public Transaction transactionStatus(long transId);
+	
+	public Object transactionRevoke(long transId);
+	
+	public Object transactionCommit(long transId);
+	
+	public TransactionReference listAllTransaction();
 	
 
 }

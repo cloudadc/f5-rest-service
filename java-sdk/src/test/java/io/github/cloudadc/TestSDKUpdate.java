@@ -15,11 +15,14 @@ public class TestSDKUpdate extends TestSDK {
 	@Test
 	public void testNodeEnabledDisabledEnabled() {
 		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
-		Node n = w.nodeEnable("10.1.20.11");
+		w.nodeEnable("10.1.20.11");
+		Node n = w.getNodeByName("10.1.20.11");
 		assertEquals(n.session, "user-enabled");
-		n = w.nodeDiable("10.1.20.11");
+		w.nodeDiable("10.1.20.11");
+		n = w.getNodeByName("10.1.20.11");
 		assertEquals(n.session, "user-disabled");
-		n = w.nodeEnable("10.1.20.11");
+		w.nodeEnable("10.1.20.11");
+		n = w.getNodeByName("10.1.20.11");
 		assertEquals(n.session, "user-enabled");
 		w.shutdown();
 	}
@@ -27,11 +30,14 @@ public class TestSDKUpdate extends TestSDK {
 	@Test
 	public void testNodeMonitorDisabledMonitorEnabled() {
 		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
-		Node n = w.nodeEnable("10.1.20.12");
+		w.nodeEnable("10.1.20.12");
+		Node n = w.getNodeByName("10.1.20.12");
 		assertEquals(n.session, "monitor-enabled");
-		n = w.nodeDiable("10.1.20.12");
+		w.nodeDiable("10.1.20.12");
+		n = w.getNodeByName("10.1.20.12");
 		assertEquals(n.session, "user-disabled");
-		n = w.nodeEnable("10.1.20.12");
+		n = w.getNodeByName("10.1.20.12");
+		w.nodeEnable("10.1.20.12");
 		assertEquals(n.session, "monitor-enabled");
 		w.shutdown();
 	}
@@ -40,11 +46,14 @@ public class TestSDKUpdate extends TestSDK {
 	public void testNodeUncheckedUserDownUnchecked() {
 		
 		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
-		Node n = w.nodeUp("10.1.20.11");
+		w.nodeUp("10.1.20.11");
+		Node n = w.getNodeByName("10.1.20.11");
 		assertEquals(n.state, "unchecked");
-		n = w.nodeOffline("10.1.20.11");
+		w.nodeOffline("10.1.20.11");
+		n = w.getNodeByName("10.1.20.11");
 		assertEquals(n.state, "user-down");
-		n = w.nodeUp("10.1.20.11");
+		w.nodeUp("10.1.20.11");
+		n = w.getNodeByName("10.1.20.11");
 		assertEquals(n.state, "unchecked");
 		w.shutdown();
 	}
@@ -52,11 +61,14 @@ public class TestSDKUpdate extends TestSDK {
 	@Test
 	public void testNodeUpUserDownDownUp() throws InterruptedException {
 		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
-		Node n = w.nodeUp("10.1.20.12");
+		w.nodeUp("10.1.20.12");
+		Node n = w.getNodeByName("10.1.20.12");
 		assertEquals(n.state, "up");
-		n = w.nodeOffline("10.1.20.12");
+		w.nodeOffline("10.1.20.12");
+		n = w.getNodeByName("10.1.20.12");
 		assertEquals(n.state, "user-down");
-		n = w.nodeUp("10.1.20.12");
+		w.nodeUp("10.1.20.12");
+		n = w.getNodeByName("10.1.20.12");
 		assertEquals(n.state, "down");
 		w.shutdown();
 		//monitor enable will wait a health check interval

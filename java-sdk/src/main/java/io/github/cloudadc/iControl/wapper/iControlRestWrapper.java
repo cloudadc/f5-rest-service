@@ -16,6 +16,8 @@ import io.github.cloudadc.iControl.model.Node;
 import io.github.cloudadc.iControl.model.NodesReference;
 import io.github.cloudadc.iControl.model.Pool;
 import io.github.cloudadc.iControl.model.PoolsReference;
+import io.github.cloudadc.iControl.model.Transaction;
+import io.github.cloudadc.iControl.model.TransactionReference;
 import io.github.cloudadc.iControl.model.VirtualServer;
 import io.github.cloudadc.iControl.model.VirtualServersReference;
 
@@ -104,44 +106,125 @@ public class iControlRestWrapper extends Wrapper{
 	}
 
 	@Override
-	public Node nodeDiable(String nodeName) {
-		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"session\": \"user-disabled\"}", Node.class);
+	public Object nodeDiable(String nodeName) {
+		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"session\": \"user-disabled\"}", Object.class);
+	}
+	
+	@Override
+	public Object nodeDiable(String nodeName, long transId) {
+		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"session\": \"user-disabled\"}", Object.class, transactionHeaders(transId));
 	}
 
 	@Override
-	public Node nodeEnable(String nodeName) {
-		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"session\": \"user-enabled\"}", Node.class);
+	public Object nodeEnable(String nodeName) {
+		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"session\": \"user-enabled\"}", Object.class);
+	}
+	
+	@Override
+	public Object nodeEnable(String nodeName, long transId) {
+		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"session\": \"user-enabled\"}", Object.class, transactionHeaders(transId));
 	}
 
 	@Override
-	public Node nodeOffline(String nodeName) {
-		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-down\"}", Node.class);
+	public Object nodeOffline(String nodeName) {
+		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-down\"}", Object.class);
+	}
+	
+	@Override
+	public Object nodeOffline(String nodeName, long transId) {
+		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-down\"}", Object.class, transactionHeaders(transId));
 	}
 
 	@Override
-	public Node nodeUp(String nodeName) {
-		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-up\"}", Node.class);
+	public Object nodeUp(String nodeName) {
+		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-up\"}", Object.class);
+	}
+	
+	@Override
+	public Object nodeUp(String nodeName, long transId) {
+		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-up\"}", Object.class, transactionHeaders(transId));
 	}
 
 	@Override
-	public Member memberDisable(String poolName, String memberName) {
-		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"session\": \"user-disabled\"}", Member.class);
+	public Object memberDisable(String poolName, String memberName) {
+		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"session\": \"user-disabled\"}", Object.class);
+	}
+	
+	@Override
+	public Object memberDisable(String poolName, String memberName, long transId) {
+		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"session\": \"user-disabled\"}", Object.class, transactionHeaders(transId));
 	}
 
 	@Override
-	public Member memberEnable(String poolName, String memberName) {
-		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"session\": \"user-enabled\"}", Member.class);
+	public Object memberEnable(String poolName, String memberName) {
+		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"session\": \"user-enabled\"}", Object.class);
+	}
+	
+	@Override
+	public Object memberEnable(String poolName, String memberName, long transId) {
+		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"session\": \"user-enabled\"}", Object.class, transactionHeaders(transId));
 	}
 
 	@Override
-	public Member memberOffline(String poolName, String memberName) {
-		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-down\"}", Member.class);
+	public Object memberOffline(String poolName, String memberName) {
+		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-down\"}", Object.class);
+	}
+	
+	@Override
+	public Object memberOffline(String poolName, String memberName, long transId) {
+		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-down\"}", Object.class, transactionHeaders(transId));
 	}
 
 	@Override
-	public Member memberUp(String poolName, String memberName) {
-		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-up\"}", Member.class);
+	public Object memberUp(String poolName, String memberName) {
+		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-up\"}", Object.class);
 	}
+	
+	@Override
+	public Object memberUp(String poolName, String memberName, long transId) {
+		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-up\"}", Object.class, transactionHeaders(transId));
+	}
+
+	@Override
+	public Transaction transactionStart() {
+		return doPost("/mgmt/tm/transaction", "{}", Transaction.class);
+	}
+
+	@Override
+	public Transaction transactionStatus(long id) {
+		return doGet("/mgmt/tm/transaction/" + id, Transaction.class);
+	}
+
+	@Override
+	public Object transactionRevoke(long id) {
+		return doDelete("/mgmt/tm/transaction/" + id, Object.class);
+	}
+
+	@Override
+	public Object transactionCommit(long id) {
+		return doPatch("/mgmt/tm/transaction/" + id, "{\"state\":\"VALIDATING\"}", Object.class);
+	}
+
+	@Override
+	public TransactionReference listAllTransaction() {
+		return doGet("/mgmt/tm/transaction", TransactionReference.class);
+	}
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 	
 

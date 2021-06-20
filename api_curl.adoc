@@ -185,4 +185,22 @@ modify ltm pool pool_3 members modify { 10.1.20.15:http { state user-up }}
 curl -k -u 'admin:admin' https://10.1.1.133/mgmt/tm/ltm/pool/pool_3/members/~Common~10.1.20.15:80 -X PATCH -H "Content-Type: application/json" -d '{"state": "user-up"}'
 ----
 
+== Transaction
 
+[source, bash]
+.*Example 1*
+----
+curl -k -u 'admin:admin' -H "Content-Type: application/json" -X POST https://10.1.1.133/mgmt/tm/transaction -d '{}'
+curl -k -u 'admin:admin' -H "Content-Type: application/json" -X GET https://10.1.1.133/mgmt/tm/transaction/1624185778507219
+curl -k -u 'admin:admin' -H "Content-Type: application/json" -X GET https://10.1.1.133/mgmt/tm/transaction
+curl -k -u 'admin:admin' -H "Content-Type: application/json" -X DELETE https://10.1.1.133/mgmt/tm/transaction/1624185778507219
+----
+
+[source, bash]
+.*Example 2*
+----
+curl -k -u 'admin:admin' -H "Content-Type: application/json" -X POST https://10.1.1.133/mgmt/tm/transaction -d '{}'| jq .transId
+  1624186049145329
+curl -k -u 'admin:admin' https://10.1.1.133/mgmt/tm/ltm/node/10.1.20.11 -X PATCH -H "X-F5-REST-Coordination-Id: 1624186049145329" -H "Content-Type: application/json" -d '{"state": "user-up"}' | jq
+curl -k -u 'admin:admin' -H "Content-Type: application/json" -X PATCH https://10.1.1.133/mgmt/tm/transaction/1624186049145329 -d '{"state":"VALIDATING"}'
+----

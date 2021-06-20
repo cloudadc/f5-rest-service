@@ -1,11 +1,16 @@
 package io.github.cloudadc.iControl.wapper;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -79,11 +84,20 @@ public abstract class Wrapper implements iWrapper {
 		return new iControlRestWrapper(hostname, username, password);
 	}
 	
+	protected Map<String, String> transactionHeaders(long id) {
+		Map<String, String> map = new HashMap<>();
+		map.put("X-F5-REST-Coordination-Id", String.valueOf(id));
+		return map;
+	}
+	
 	protected <T> T doGet(String url, Class<T> valueType) {
+		
 		HttpGet request = new HttpGet(getBaseURL() + url);
 		request.setHeader(HttpHeaders.ACCEPT, APPLICATION_JSON);
 		request.addHeader(HttpHeaders.USER_AGENT, USER_AGENT);
+		
 		logger.info(request.toString());		
+		
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {
 				ObjectMapper om = new ObjectMapper();
@@ -94,13 +108,66 @@ public abstract class Wrapper implements iWrapper {
 		} 
 	}
 	
-	protected <T> T doPatch(String url, String payload, Class<T> valueType) {
+	protected <T> T doPatch(String url, String payload, Class<T> valueType) {	
+		return doPatch(url, payload, valueType, Collections.<String, String>emptyMap());
+	}
+	
+    protected <T> T doPatch(String url, String payload, Class<T> valueType, Map<String, String> headers) {
+		
 		HttpPatch request = new HttpPatch(getBaseURL() + url);
 		request.setHeader(HttpHeaders.ACCEPT, APPLICATION_JSON);
 		request.addHeader(HttpHeaders.USER_AGENT, USER_AGENT);
 		request.addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+		headers.keySet().forEach(key -> {
+			request.addHeader(key, headers.get(key));
+		});
 		request.setEntity(new StringEntity(payload, ContentType.APPLICATION_JSON));
+		
 		logger.info(request.toString());
+		
+		try {
+			try(CloseableHttpResponse response = client.execute(request)) {
+				ObjectMapper om = new ObjectMapper();
+				return om.readValue(response.getEntity().getContent(), valueType);
+			}
+		} catch (Exception e) {
+			throw new ApiInvocationException(e);
+		} 
+	}
+    
+    protected <T> T doPost(String url, String payload, Class<T> valueType) {
+    	return doPost(url, payload, valueType, Collections.<String, String>emptyMap());
+    }
+	
+	protected <T> T doPost(String url, String payload, Class<T> valueType, Map<String, String> headers) {
+		
+		HttpPost request = new HttpPost(getBaseURL() + url);
+		request.setHeader(HttpHeaders.ACCEPT, APPLICATION_JSON);
+		request.addHeader(HttpHeaders.USER_AGENT, USER_AGENT);
+		request.addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+		headers.keySet().forEach(key -> {
+			request.addHeader(key, headers.get(key));
+		});
+		request.setEntity(new StringEntity(payload, ContentType.APPLICATION_JSON));
+		
+		try {
+			try(CloseableHttpResponse response = client.execute(request)) {
+				ObjectMapper om = new ObjectMapper();
+				return om.readValue(response.getEntity().getContent(), valueType);
+			}
+		} catch (Exception e) {
+			throw new ApiInvocationException(e);
+		} 
+		
+	}
+	
+	protected <T> T doDelete(String url, Class<T> valueType) {
+		
+		HttpDelete request = new HttpDelete(getBaseURL() + url);
+		request.setHeader(HttpHeaders.ACCEPT, APPLICATION_JSON);
+		request.addHeader(HttpHeaders.USER_AGENT, USER_AGENT);
+		
+		logger.info(request.toString());		
 		
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {

@@ -2,10 +2,10 @@ package io.github.cloudadc;
 
 public class TestSDK {
 	 
-	protected String HOST = "10.1.1.133";
+	static String HOST = "10.1.1.133";
 	
-	protected String USER = "admin";
+	static String USER = "admin";
 	
-	protected String PASSWORD = "admin";
+	static String PASSWORD = "admin";
 		
 }

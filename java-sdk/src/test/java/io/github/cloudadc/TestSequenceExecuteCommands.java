@@ -251,13 +251,13 @@ public class TestSequenceExecuteCommands extends TestSDK {
 		long end = System.currentTimeMillis();
 		
 		assertTrue("multiple connections, 10 times update", (t1 - start) < 1000 * 10);
-		assertTrue("multiple connections, 10 times update", (t2 - start) < 1000 * 10);
-		assertTrue("multiple connections, 10 times update", (t3 - start) < 1000 * 10);
-		assertTrue("multiple connections, 10 times update", (t4 - start) < 1000 * 10);
-		assertTrue("multiple connections, 10 times update", (t5 - start) < 1000 * 10);
-		assertTrue("multiple connections, 10 times update", (t6 - start) < 1000 * 10);
-		assertTrue("multiple connections, 10 times update", (t7 - start) < 1000 * 10);
-		assertTrue("multiple connections, 10 times update", (end - start) < 1000 * 10);
+		assertTrue("multiple connections, 10 times update", (t2 - t2) < 1000 * 10);
+		assertTrue("multiple connections, 10 times update", (t3 - t2) < 1000 * 10);
+		assertTrue("multiple connections, 10 times update", (t4 - t3) < 1000 * 10);
+		assertTrue("multiple connections, 10 times update", (t5 - t4) < 1000 * 10);
+		assertTrue("multiple connections, 10 times update", (t6 - t5) < 1000 * 10);
+		assertTrue("multiple connections, 10 times update", (t7 - t6) < 1000 * 10);
+		assertTrue("multiple connections, 10 times update", (end - t7) < 1000 * 10);
 		
 		for (int i = 0 ; i < 80 ; i ++) {
 			w[i].shutdown();

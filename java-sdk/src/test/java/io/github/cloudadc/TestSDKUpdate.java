@@ -36,8 +36,8 @@ public class TestSDKUpdate extends TestSDK {
 		w.nodeDiable("10.1.20.12");
 		n = w.getNodeByName("10.1.20.12");
 		assertEquals(n.session, "user-disabled");
-		n = w.getNodeByName("10.1.20.12");
 		w.nodeEnable("10.1.20.12");
+		n = w.getNodeByName("10.1.20.12");
 		assertEquals(n.session, "monitor-enabled");
 		w.shutdown();
 	}

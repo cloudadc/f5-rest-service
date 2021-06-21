@@ -10,6 +10,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.ssl.SSLContextBuilder;
 
+import io.github.cloudadc.iControl.model.BashResponse;
 import io.github.cloudadc.iControl.model.Member;
 import io.github.cloudadc.iControl.model.MembersReference;
 import io.github.cloudadc.iControl.model.Node;
@@ -127,22 +128,34 @@ public class iControlRestWrapper extends Wrapper{
 
 	@Override
 	public Object nodeOffline(String nodeName) {
-		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-down\"}", Object.class);
+		Transaction t = this.transactionStart();
+		doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-down\"}", Object.class, transactionHeaders(t.transId));
+		doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"session\": \"user-disabled\"}", Object.class, transactionHeaders(t.transId));
+		this.transactionCommit(t.transId);
+		return SUCCESS;
 	}
 	
 	@Override
 	public Object nodeOffline(String nodeName, long transId) {
-		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-down\"}", Object.class, transactionHeaders(transId));
+		doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-down\"}", Object.class, transactionHeaders(transId));
+		doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"session\": \"user-disabled\"}", Object.class, transactionHeaders(transId));
+		return SUCCESS;
 	}
 
 	@Override
 	public Object nodeUp(String nodeName) {
-		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-up\"}", Object.class);
+		Transaction t = this.transactionStart();
+		doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-up\"}", Object.class, transactionHeaders(t.transId));
+		doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"session\": \"user-enabled\"}", Object.class, transactionHeaders(t.transId));
+		this.transactionCommit(t.transId);
+		return SUCCESS;
 	}
 	
 	@Override
 	public Object nodeUp(String nodeName, long transId) {
-		return doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-up\"}", Object.class, transactionHeaders(transId));
+		doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"state\": \"user-up\"}", Object.class, transactionHeaders(transId));
+		doPatch("/mgmt/tm/ltm/node/" + nodeName, "{\"session\": \"user-enabled\"}", Object.class, transactionHeaders(transId));
+		return SUCCESS;
 	}
 
 	@Override
@@ -167,22 +180,34 @@ public class iControlRestWrapper extends Wrapper{
 
 	@Override
 	public Object memberOffline(String poolName, String memberName) {
-		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-down\"}", Object.class);
+		Transaction t = this.transactionStart();
+		doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-down\"}", Object.class, transactionHeaders(t.transId));
+		doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"session\": \"user-disabled\"}", Object.class, transactionHeaders(t.transId));
+		this.transactionCommit(t.transId);
+		return SUCCESS;
 	}
 	
 	@Override
 	public Object memberOffline(String poolName, String memberName, long transId) {
-		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-down\"}", Object.class, transactionHeaders(transId));
+		doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-down\"}", Object.class, transactionHeaders(transId));
+		doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"session\": \"user-disabled\"}", Object.class, transactionHeaders(transId));
+		return SUCCESS;
 	}
 
 	@Override
 	public Object memberUp(String poolName, String memberName) {
-		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-up\"}", Object.class);
+		Transaction t = this.transactionStart();
+		doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-up\"}", Object.class, transactionHeaders(t.transId));
+		doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"session\": \"user-enabled\"}", Object.class, transactionHeaders(t.transId));
+		this.transactionCommit(t.transId);
+		return SUCCESS;
 	}
 	
 	@Override
 	public Object memberUp(String poolName, String memberName, long transId) {
-		return doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-up\"}", Object.class, transactionHeaders(transId));
+		doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"state\": \"user-up\"}", Object.class, transactionHeaders(transId));
+		doPatch("/mgmt/tm/ltm/pool/" + poolName + "/members/~Common~" + memberName, "{\"session\": \"user-enabled\"}", Object.class, transactionHeaders(transId));
+		return SUCCESS;
 	}
 
 	@Override
@@ -210,24 +235,9 @@ public class iControlRestWrapper extends Wrapper{
 		return doGet("/mgmt/tm/transaction", TransactionReference.class);
 	}
 
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
+	@Override
+	public BashResponse bashScripts(String bash) {
+		return doPost("/mgmt/tm/util/bash", "{\"command\":\"run\", \"utilCmdArgs\": \"-c '" + bash + "'\"}", BashResponse.class);
+	}
 
 }

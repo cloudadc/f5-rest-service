@@ -1,5 +1,6 @@
 package io.github.cloudadc.iControl.wapper;
 
+import io.github.cloudadc.iControl.model.BashResponse;
 import io.github.cloudadc.iControl.model.Member;
 import io.github.cloudadc.iControl.model.MembersReference;
 import io.github.cloudadc.iControl.model.Node;
@@ -38,6 +39,11 @@ public interface iWrapper {
 	
 	public Object nodeEnable(String nodeName);
 	
+	/**
+	 * Force Offline = user-disabled + user-down
+	 * @param nodeName
+	 * @return
+	 */
 	public Object nodeOffline(String nodeName);
 	
 	public Object nodeUp(String nodeName);
@@ -87,6 +93,8 @@ public interface iWrapper {
 	public Object transactionCommit(long transId);
 	
 	public TransactionReference listAllTransaction();
+	
+	public BashResponse bashScripts(String bash);
 	
 
 }

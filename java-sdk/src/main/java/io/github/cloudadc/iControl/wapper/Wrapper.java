@@ -27,6 +27,8 @@ public abstract class Wrapper implements iWrapper {
 
 	static final String USER_AGENT = "iControl Rest Java JDK"; 
 	static final String APPLICATION_JSON = "application/json";
+	
+	static final String SUCCESS = "{\"success\": 1}";
 
 	final private String hostname;
 	

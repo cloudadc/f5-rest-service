@@ -17,8 +17,6 @@ import io.github.cloudadc.iControl.wapper.Wrapper;
 
 public class TestSDKQuery extends TestSDK {
 	
-   
-
 	@Test
 	public void listAllVirtualServers() {
 		VirtualServersReference reference = Wrapper.create(HOST, USER, PASSWORD).listAllVirtualServers();

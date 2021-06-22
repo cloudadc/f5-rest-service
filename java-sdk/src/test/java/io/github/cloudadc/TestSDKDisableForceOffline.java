@@ -1,11 +1,13 @@
 package io.github.cloudadc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import io.github.cloudadc.iControl.model.Member;
-import io.github.cloudadc.iControl.model.Node;
+import io.github.cloudadc.iControl.model.*;
 import io.github.cloudadc.iControl.wapper.Wrapper;
 
 public class TestSDKDisableForceOffline extends TestSDK {
@@ -166,6 +168,171 @@ public class TestSDKDisableForceOffline extends TestSDK {
 		w.shutdown();	
 	}
 	
+	@Test
+	public void testNodesDisable() {
+		
+		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
+		
+		w.nodeEnable(new String[] {"10.1.20.11", "10.1.20.12", "10.1.20.13"});
+		
+		Node n = w.getNodeByName("10.1.20.11");
+		assertEquals(n.session, "user-enabled");
+		assertEquals(n.state, "unchecked");
+		n = w.getNodeByName("10.1.20.12");
+		assertEquals(n.session, "monitor-enabled");
+		assertEquals(n.state, "up");
+		n = w.getNodeByName("10.1.20.13");
+		assertEquals(n.session, "user-enabled");
+		assertEquals(n.state, "unchecked");
+		
+		w.nodeDiable(new String[] {"10.1.20.11", "10.1.20.12", "10.1.20.13"});
+		n = w.getNodeByName("10.1.20.11");
+		assertEquals(n.session, "user-disabled");
+		assertEquals(n.state, "unchecked");
+		n = w.getNodeByName("10.1.20.12");
+		assertEquals(n.session, "user-disabled");
+		assertEquals(n.state, "up");
+		n = w.getNodeByName("10.1.20.13");
+		assertEquals(n.session, "user-disabled");
+		assertEquals(n.state, "unchecked");
+		
+        w.nodeEnable(new String[] {"10.1.20.11", "10.1.20.12", "10.1.20.13"});
+		
+		n = w.getNodeByName("10.1.20.11");
+		assertEquals(n.session, "user-enabled");
+		assertEquals(n.state, "unchecked");
+		n = w.getNodeByName("10.1.20.12");
+		assertEquals(n.session, "monitor-enabled");
+		assertEquals(n.state, "up");
+		n = w.getNodeByName("10.1.20.13");
+		assertEquals(n.session, "user-enabled");
+		assertEquals(n.state, "unchecked");
+		
+		w.shutdown();
+	}
+	
+	@Test
+	public void testNodesDisableBash() {
+		
+        Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
+		
+		String bash = "tmsh modify ltm node 10.1.20.11 session user-disabled; tmsh modify ltm node 10.1.20.12 session user-disabled;tmsh modify ltm node 10.1.20.13 session user-disabled";
+		BashResponse resp = w.bashScripts(bash);
+		assertTrue(resp.utilCmdArgs.contains(bash));
+		
+		Node n1 = w.getNodeByName("10.1.20.11");
+		Node n2 = w.getNodeByName("10.1.20.12");
+		Node n3 = w.getNodeByName("10.1.20.13");
+		
+		assertEquals("user-disabled", n1.session);
+		assertEquals("user-disabled", n2.session);
+		assertEquals("user-disabled", n3.session);
+		assertEquals("unchecked", n1.state);
+		assertEquals("up", n2.state);
+		assertEquals("unchecked", n3.state);
+		
+		bash = "tmsh modify ltm node 10.1.20.11 session user-enabled; tmsh modify ltm node 10.1.20.12 session user-enabled;tmsh modify ltm node 10.1.20.13 session user-enabled";
+		resp = w.bashScripts(bash);
+		assertTrue(resp.utilCmdArgs.contains(bash));
+		
+		n1 = w.getNodeByName("10.1.20.11");
+		n2 = w.getNodeByName("10.1.20.12");
+		n3 = w.getNodeByName("10.1.20.13");
+		
+		assertEquals("user-enabled", n1.session);
+		assertEquals("monitor-enabled", n2.session);
+		assertEquals("user-enabled", n3.session);
+		assertEquals("unchecked", n1.state);
+		assertEquals("up", n2.state);
+		assertEquals("unchecked", n3.state);
+		
+		w.shutdown();
+	}
+	
+	@Test
+    public void testNodesOffline() {
+
+		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
+		
+		w.nodeUp(new String[] {"10.1.20.11", "10.1.20.12", "10.1.20.13"});
+		
+		Node n = w.getNodeByName("10.1.20.11");
+		assertEquals(n.session, "user-enabled");
+		assertEquals(n.state, "unchecked");
+		n = w.getNodeByName("10.1.20.12");
+		assertEquals(n.session, "monitor-enabled");
+		assertEquals(n.state, "up");
+		n = w.getNodeByName("10.1.20.13");
+		assertEquals(n.session, "user-enabled");
+		assertEquals(n.state, "unchecked");
+		
+		w.nodeOffline(new String[] {"10.1.20.11", "10.1.20.12", "10.1.20.13"});
+		
+		n = w.getNodeByName("10.1.20.11");
+		assertEquals(n.session, "user-disabled");
+		assertEquals(n.state, "user-down");
+		n = w.getNodeByName("10.1.20.12");
+		assertEquals(n.session, "user-disabled");
+		assertEquals(n.state, "user-down");
+		n = w.getNodeByName("10.1.20.13");
+		assertEquals(n.session, "user-disabled");
+		assertEquals(n.state, "user-down");
+		
+		w.nodeUp(new String[] {"10.1.20.11", "10.1.20.12", "10.1.20.13"});
+		
+		n = w.getNodeByName("10.1.20.11");
+		assertEquals(n.session, "user-enabled");
+		assertEquals(n.state, "unchecked");
+		n = w.getNodeByName("10.1.20.12");
+		assertEquals(n.session, "monitor-enabled");
+		assertEquals(n.state, "up");
+		n = w.getNodeByName("10.1.20.13");
+		assertEquals(n.session, "user-enabled");
+		assertEquals(n.state, "unchecked");
+		
+		w.shutdown();
+	}
+	
+	@Test
+	public void testNodesOfflineBash() throws InterruptedException {
+		
+        Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
+		
+		String bash = "tmsh modify ltm node 10.1.20.11 session user-disabled; tmsh modify ltm node 10.1.20.12 session user-disabled;tmsh modify ltm node 10.1.20.13 session user-disabled;tmsh modify ltm node 10.1.20.11 state user-down; tmsh modify ltm node 10.1.20.12 state user-down;tmsh modify ltm node 10.1.20.13 state user-down";
+		BashResponse resp = w.bashScripts(bash);
+		assertTrue(resp.utilCmdArgs.contains(bash));
+		
+		Node n1 = w.getNodeByName("10.1.20.11");
+		Node n2 = w.getNodeByName("10.1.20.12");
+		Node n3 = w.getNodeByName("10.1.20.13");
+		
+		assertEquals("user-disabled", n1.session);
+		assertEquals("user-disabled", n2.session);
+		assertEquals("user-disabled", n3.session);
+		assertEquals("user-down", n1.state);
+		assertEquals("user-down", n2.state);
+		assertEquals("user-down", n3.state);
+		
+		bash = "tmsh modify ltm node 10.1.20.11 session user-enabled; tmsh modify ltm node 10.1.20.12 session user-enabled;tmsh modify ltm node 10.1.20.13 session user-enabled;tmsh modify ltm node 10.1.20.11 state user-up; tmsh modify ltm node 10.1.20.12 state user-up;tmsh modify ltm node 10.1.20.13 state user-up";
+		resp = w.bashScripts(bash);
+		assertTrue(resp.utilCmdArgs.contains(bash));
+		
+		TimeUnit.SECONDS.sleep(3);
+		
+		n1 = w.getNodeByName("10.1.20.11");
+		n2 = w.getNodeByName("10.1.20.12");
+		n3 = w.getNodeByName("10.1.20.13");
+		
+		assertEquals("user-enabled", n1.session);
+		assertEquals("monitor-enabled", n2.session);
+		assertEquals("user-enabled", n3.session);
+		assertEquals("unchecked", n1.state);
+		assertEquals("up", n2.state);
+		assertEquals("unchecked", n3.state);
+		
+		w.shutdown();
+	}
+	
 	/**
 	 * Member without monitor
 	 */
@@ -224,6 +391,7 @@ public class TestSDKDisableForceOffline extends TestSDK {
 	 */
 	@Test
 	public void testMemberDisableWithMonitorDown() {
+		
 		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
 		
 		w.memberEnable("pool_1", "10.1.20.23:8081");
@@ -242,6 +410,51 @@ public class TestSDKDisableForceOffline extends TestSDK {
 		assertEquals(m.state, "down");
 		
 		w.shutdown();
+	}
+	
+	@Test
+	public void testMembersDisable() {
+		
+		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
+		
+		w.memberEnable("pool_1", new String[] {"10.1.20.11:8081", "10.1.20.12:8081", "10.1.20.23:8081"});
+		
+		w.getPoolByNameExpandSubcollections("pool_1").membersReference.items.forEach(m -> {
+			if(m.name.equals("10.1.20.11:8081") || m.name.equals("10.1.20.12:8081")) {
+				assertEquals(m.session, "monitor-enabled");
+				assertEquals(m.state, "up");
+			} else if(m.name.equals("10.1.20.23:8081")) {
+				assertEquals(m.session, "monitor-enabled");
+				assertEquals(m.state, "down");
+			}
+		});
+		
+		w.memberDisable("pool_1", new String[] {"10.1.20.11:8081", "10.1.20.12:8081", "10.1.20.23:8081"});
+		
+		w.getPoolByNameExpandSubcollections("pool_1").membersReference.items.forEach(m -> {
+			if(m.name.equals("10.1.20.11:8081") || m.name.equals("10.1.20.12:8081")) {
+				assertEquals(m.session, "user-disabled");
+				assertEquals(m.state, "up");
+			} else if(m.name.equals("10.1.20.23:8081")) {
+				assertEquals(m.session, "user-disabled");
+				assertEquals(m.state, "down");
+			}
+		});
+		
+        w.memberEnable("pool_1", new String[] {"10.1.20.11:8081", "10.1.20.12:8081", "10.1.20.23:8081"});
+		
+		w.getPoolByNameExpandSubcollections("pool_1").membersReference.items.forEach(m -> {
+			if(m.name.equals("10.1.20.11:8081") || m.name.equals("10.1.20.12:8081")) {
+				assertEquals(m.session, "monitor-enabled");
+				assertEquals(m.state, "up");
+			} else if(m.name.equals("10.1.20.23:8081")) {
+				assertEquals(m.session, "monitor-enabled");
+				assertEquals(m.state, "down");
+			}
+		});
+		
+		w.shutdown();
+		
 	}
 	
 	/**
@@ -355,6 +568,45 @@ public class TestSDKDisableForceOffline extends TestSDK {
 		m = w.getMemberByName("pool_1", "10.1.20.23:8081");
 		assertEquals(m.session, "monitor-enabled");
 		assertEquals(m.state, "down");
+		
+		w.shutdown();
+	}
+	
+	@Test
+	public void testMembersOffline() {
+		
+		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
+		
+        w.memberUp("pool_1", new String[] {"10.1.20.11:8081", "10.1.20.12:8081", "10.1.20.23:8081"});
+		
+		w.getPoolByNameExpandSubcollections("pool_1").membersReference.items.forEach(m -> {
+			if(m.name.equals("10.1.20.11:8081") || m.name.equals("10.1.20.12:8081")) {
+				assertEquals(m.session, "monitor-enabled");
+				assertEquals(m.state, "up");
+			} else if(m.name.equals("10.1.20.23:8081")) {
+				assertEquals(m.session, "monitor-enabled");
+				assertEquals(m.state, "down");
+			}
+		});
+		
+		w.memberOffline("pool_1", new String[] {"10.1.20.11:8081", "10.1.20.12:8081", "10.1.20.23:8081"});
+		
+		w.getPoolByNameExpandSubcollections("pool_1").membersReference.items.forEach(m -> {
+			assertEquals(m.session, "user-disabled");
+			assertEquals(m.state, "user-down");
+		});
+		
+		w.memberUp("pool_1", new String[] {"10.1.20.11:8081", "10.1.20.12:8081", "10.1.20.23:8081"});
+		
+		w.getPoolByNameExpandSubcollections("pool_1").membersReference.items.forEach(m -> {
+			if(m.name.equals("10.1.20.11:8081") || m.name.equals("10.1.20.12:8081")) {
+				assertEquals(m.session, "monitor-enabled");
+				assertEquals(m.state, "up");
+			} else if(m.name.equals("10.1.20.23:8081")) {
+				assertEquals(m.session, "monitor-enabled");
+				assertEquals(m.state, "down");
+			}
+		});
 		
 		w.shutdown();
 	}

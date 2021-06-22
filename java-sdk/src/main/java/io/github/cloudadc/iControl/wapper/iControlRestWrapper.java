@@ -1,5 +1,9 @@
 package io.github.cloudadc.iControl.wapper;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -238,6 +242,94 @@ public class iControlRestWrapper extends Wrapper{
 	@Override
 	public BashResponse bashScripts(String bash) {
 		return doPost("/mgmt/tm/util/bash", "{\"command\":\"run\", \"utilCmdArgs\": \"-c '" + bash + "'\"}", BashResponse.class);
+	}
+
+	@Override
+	public Object nodeDiable(String[] nodeNames) {
+		List<Object> respList = new ArrayList<>();
+		Transaction t = this.transactionStart();
+		Arrays.asList(nodeNames).forEach(n -> {
+			respList.add(this.nodeDiable(n, t.transId));
+		});
+		this.transactionCommit(t.transId);
+		return respList;
+	}
+
+	@Override
+	public Object nodeEnable(String[] nodeNames) {
+		List<Object> respList = new ArrayList<>();
+		Transaction t = this.transactionStart();
+        Arrays.asList(nodeNames).forEach(n -> {
+        	respList.add(this.nodeEnable(n, t.transId));
+		});
+		this.transactionCommit(t.transId);
+		return respList;
+	}
+
+	@Override
+	public Object nodeOffline(String[] nodeNames) {
+		List<Object> respList = new ArrayList<>();
+		Transaction t = this.transactionStart();
+        Arrays.asList(nodeNames).forEach(n -> {
+        	respList.add(this.nodeOffline(n, t.transId));
+		});
+		this.transactionCommit(t.transId);
+		return respList;
+	}
+
+	@Override
+	public Object nodeUp(String[] nodeNames) {
+		List<Object> respList = new ArrayList<>();
+		Transaction t = this.transactionStart();
+        Arrays.asList(nodeNames).forEach(n -> {
+        	respList.add(this.nodeUp(n, t.transId));
+		});
+		this.transactionCommit(t.transId);
+		return respList;
+	}
+
+	@Override
+	public Object memberDisable(String poolName, String[] memberNames) {
+		List<Object> respList = new ArrayList<>();
+		Transaction t = this.transactionStart();
+        Arrays.asList(memberNames).forEach(n -> {
+        	respList.add(this.memberDisable(poolName, n, t.transId));
+		});
+		this.transactionCommit(t.transId);
+		return respList;
+	}
+
+	@Override
+	public Object memberEnable(String poolName, String[] memberNames) {
+		List<Object> respList = new ArrayList<>();
+		Transaction t = this.transactionStart();
+        Arrays.asList(memberNames).forEach(n -> {
+        	respList.add(this.memberEnable(poolName, n, t.transId));
+		});
+		this.transactionCommit(t.transId);
+		return respList;
+	}
+
+	@Override
+	public Object memberOffline(String poolName, String[] memberNames) {
+		List<Object> respList = new ArrayList<>();
+		Transaction t = this.transactionStart();
+        Arrays.asList(memberNames).forEach(n -> {
+        	respList.add(this.memberOffline(poolName, n, t.transId));
+		});
+		this.transactionCommit(t.transId);
+		return respList;
+	}
+
+	@Override
+	public Object memberUp(String poolName, String[] memberNames) {
+		List<Object> respList = new ArrayList<>();
+		Transaction t = this.transactionStart();
+        Arrays.asList(memberNames).forEach(n -> {
+        	respList.add(this.memberUp(poolName, n, t.transId));
+		});
+		this.transactionCommit(t.transId);
+		return respList;
 	}
 
 }

@@ -4,6 +4,56 @@ A Java SDK for link:https://clouddocs.f5.com/api/icontrol-rest[F5 iControlRest].
 
 == Supported API
 
+* BIQ
+** link:README.adoc[TODO]
+
+* DNS
+** link:README.adoc[TODO]
+
+* LTM
+** link:README.adoc[listAllVirtualServers]
+** link:README.adoc[listAllVirtualServersExpandSubcollections]
+** link:README.adoc[getVirtualServerByName]
+** link:README.adoc[getVirtualServerByNameExpandSubcollections]
+** link:README.adoc[listAllNodes]
+** link:README.adoc[getNodeByName]
+** link:README.adoc[nodeDiable]
+** link:README.adoc[nodeDiable]
+** link:README.adoc[nodeDiable]
+** link:README.adoc[nodeEnable]
+** link:README.adoc[nodeEnable]
+** link:README.adoc[nodeEnable]
+** link:README.adoc[nodeOffline]
+** link:README.adoc[nodeOffline]
+** link:README.adoc[nodeOffline]
+** link:README.adoc[nodeUp]
+** link:README.adoc[nodeUp]
+** link:README.adoc[nodeUp]
+** link:README.adoc[listAllPools]
+** link:README.adoc[listAllPoolsExpandSubcollections]
+** link:README.adoc[getPoolByName]
+** link:README.adoc[getPoolByNameExpandSubcollections]
+** link:README.adoc[listAllMembers]
+** link:README.adoc[getMemberByName]
+** link:README.adoc[memberDisable]
+** link:README.adoc[memberDisable]
+** link:README.adoc[memberDisable]
+** link:README.adoc[memberEnable]
+** link:README.adoc[memberEnable]
+** link:README.adoc[memberEnable]
+** link:README.adoc[memberOffline]
+** link:README.adoc[memberOffline]
+** link:README.adoc[memberOffline]
+** link:README.adoc[memberUp]
+** link:README.adoc[memberUp]
+** link:README.adoc[memberUp]
+** link:README.adoc[transactionStart]
+** link:README.adoc[transactionStatus]
+** link:README.adoc[transactionRevoke]
+** link:README.adoc[transactionCommit]
+** link:README.adoc[listAllTransaction]
+** link:README.adoc[bashScripts]
+
 == Build
 
 [source, bash]

@@ -12,7 +12,7 @@ import io.github.cloudadc.iControl.wapper.Wrapper;
 public class TestBashScript extends TestSDK {
 	
 	@Test
-	public void testBashScriptBatchDiableNode() {
+	public void testBashScriptBatchNodeSession() {
 		
 		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
 		
@@ -44,7 +44,7 @@ public class TestBashScript extends TestSDK {
 	}
 	
 	@Test
-	public void testBashScriptBatchOfflineNode() {
+	public void testBashScriptBatchNodeState() {
 		
 		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
 		
@@ -77,10 +77,7 @@ public class TestBashScript extends TestSDK {
 		assertEquals("unchecked", n1.state);
 		assertEquals("up", n2.state);
 		assertEquals("unchecked", n3.state);
-		
-		System.out.println(n1.session + " - " + n1.state);
-		System.out.println(n2.session + " - " + n2.state);
-		System.out.println(n3.session + " - " + n3.state);
+	
 	}
 
 }

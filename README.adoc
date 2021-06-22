@@ -58,48 +58,28 @@ A Java SDK for link:https://clouddocs.f5.com/api/icontrol-rest[F5 iControlRest].
 
 [source, bash]
 ----
-cd java-sdk
-mvn clean install -Dmaven.test.skip=true
+cd java-sdk && mvn clean install -Dmaven.test.skip=true
 ----
 
-== Set up Certificates
+For running the unit test, you 
 
-*1. Steps for generate key store*
+* need a F5 VE installed, refer next section to finish *Unit Test Setup*.
+* modify link:java-sdk/src/test/java/io/github/cloudadc/TestSDK.java[TestSDK.java] with a proper `HOST`, `USER` and `PASSWORD`.
 
-. download public key either from F5 Key, or from Browser, eg, localhost_localdomain.crt
-. add public key to a trust store
+then run
 
 [source, bash]
 ----
-keytool -import -noprompt -trustcacerts -alias f5ve -file localhost_localdomain.crt -keystore f5_keystore.jks -storepass F5demo666
+cd java-sdk && mvn clean install 
 ----
-        
-*2. Run APP*
+
+== Unit Test Setup
+
+*1. Install LAMP_v7*
 
 [source, bash]
+.*2. Setup VE*
 ----
-java -Djavax.net.ssl.trustStore=f5_keystore.jks -Djavax.net.ssl.trustStorePassword=F5demo666
-----
-
-== Examples
-
-[source, bash]
-.*Create Test Object*
-----
-create ltm pool pool_1 members add { 10.1.20.11:8081 { address 10.1.20.11 } 10.1.20.12:8081 { address 10.1.20.12 } 10.1.20.23:8081 { address 10.1.20.23 } } monitor http
-create ltm pool pool_2 members add { 10.1.20.13:8081 { address 10.1.20.13 } 10.1.20.14:8081 { address 10.1.20.14 } 10.1.20.24:8081 { address 10.1.20.24 }} 
-create ltm pool pool_3 members add { 10.1.20.15:8081 { address 10.1.20.15 } 10.1.20.16:8081 { address 10.1.20.16 } } monitor http
-create ltm pool pool_3 members add { 10.1.20.17:8081 { address 10.1.20.17 } 10.1.20.18:8081 { address 10.1.20.18 } } monitor http
-create ltm pool pool_4 members add { 10.1.20.17:8081 { address 10.1.20.17 } 10.1.20.18:8081 { address 10.1.20.18 } } monitor http
-create ltm pool pool_5 members add { 10.1.20.19:8081 { address 10.1.20.19 } 10.1.20.20:8081 { address 10.1.20.20 } } monitor http
-create ltm pool pool_6 members add { 10.1.20.21:8081 { address 10.1.20.21 } 10.1.20.22:8081 { address 10.1.20.22 } } monitor http
-create ltm pool pool_7 members add { 10.1.20.11:8081 { address 10.1.20.11 } 10.1.20.12:8081 { address 10.1.20.12 } 10.1.20.13:8081 { address 10.1.20.13 } 10.1.20.14:8081 { address 10.1.20.14 } 10.1.20.15:8081 { address 10.1.20.15 } 10.1.20.16:8081 { address 10.1.20.16 } 10.1.20.17:8081 { address 10.1.20.17 } 10.1.20.18:8081 { address 10.1.20.18 } 10.1.20.19:8081 { address 10.1.20.19 } 10.1.20.20:8081 { address 10.1.20.20 }}
-create ltm pool pool_8 members add { 10.1.20.11:8081 { address 10.1.20.11 } 10.1.20.12:8081 { address 10.1.20.12 } 10.1.20.13:8081 { address 10.1.20.13 } 10.1.20.14:8081 { address 10.1.20.14 } 10.1.20.15:8081 { address 10.1.20.15 } 10.1.20.16:8081 { address 10.1.20.16 } 10.1.20.17:8081 { address 10.1.20.17 } 10.1.20.18:8081 { address 10.1.20.18 } 10.1.20.19:8081 { address 10.1.20.19 } 10.1.20.20:8081 { address 10.1.20.20 }}
-
-create ltm virtual vs_1 destination 10.1.10.11:80 pool pool_1 ip-protocol tcp profiles add { http { } } source-address-translation { type automap } 
-create ltm virtual vs_2 destination 10.1.10.12:80 pool pool_2 ip-protocol tcp profiles add { http { } } source-address-translation { type automap } 
-create ltm virtual vs_3 destination 10.1.10.13:80 pool pool_3 ip-protocol tcp profiles add { http { } } source-address-translation { type automap } 
-create ltm virtual vs_4 destination 10.1.10.14:80 pool pool_4 ip-protocol tcp profiles add { http { } } source-address-translation { type automap } 
-create ltm virtual vs_5 destination 10.1.10.15:80 pool pool_5 ip-protocol tcp profiles add { http { } } source-address-translation { type automap } 
-create ltm virtual vs_6 destination 10.1.10.16:80 pool pool_6 ip-protocol tcp profiles add { http { } } source-address-translation { type automap } 
+./bash_net_setup.sh
+./bash_add.sh 
 ----

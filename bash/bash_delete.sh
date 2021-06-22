@@ -1,0 +1,33 @@
+tmsh delete ltm virtual vs_1
+tmsh delete ltm virtual vs_2
+tmsh delete ltm virtual vs_3
+tmsh delete ltm virtual vs_4
+tmsh delete ltm virtual vs_5
+tmsh delete ltm virtual vs_6
+tmsh delete ltm snatpool snat_1
+tmsh delete ltm snatpool snat_2
+tmsh delete ltm snatpool snat_3
+tmsh delete ltm pool pool_1
+tmsh delete ltm pool pool_2
+tmsh delete ltm pool pool_3
+tmsh delete ltm pool pool_4
+tmsh delete ltm pool pool_5
+tmsh delete ltm pool pool_6
+tmsh delete ltm pool pool_7
+tmsh delete ltm pool pool_8
+tmsh delete ltm node 10.1.20.11
+tmsh delete ltm node 10.1.20.12
+tmsh delete ltm node 10.1.20.13
+tmsh delete ltm node 10.1.20.14
+tmsh delete ltm node 10.1.20.15
+tmsh delete ltm node 10.1.20.16
+tmsh delete ltm node 10.1.20.17
+tmsh delete ltm node 10.1.20.18
+tmsh delete ltm node 10.1.20.19
+tmsh delete ltm node 10.1.20.20
+tmsh delete ltm node 10.1.20.21
+tmsh delete ltm node 10.1.20.22
+tmsh delete ltm node 10.1.20.23
+tmsh delete ltm node 10.1.20.24
+
+

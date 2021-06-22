@@ -2,6 +2,10 @@ package io.github.cloudadc;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -20,13 +24,27 @@ public class TestSDKQuery extends TestSDK {
 	@Test
 	public void listAllVirtualServers() {
 		VirtualServersReference reference = Wrapper.create(HOST, USER, PASSWORD).listAllVirtualServers();
-		assertEquals(6, reference.items.size());
+		Set<String> set = new HashSet<>();
+		reference.items.forEach(v -> set.add(v.name));
+		assertTrue(set.contains("vs_1"));
+		assertTrue(set.contains("vs_2"));
+		assertTrue(set.contains("vs_3"));
+		assertTrue(set.contains("vs_4"));
+		assertTrue(set.contains("vs_5"));
+		assertTrue(set.contains("vs_6"));
 	}
 	
 	@Test
 	public void listAllVirtualServersExpandSubcollections() {
 		VirtualServersReference reference =  Wrapper.create(HOST, USER, PASSWORD).listAllVirtualServersExpandSubcollections();
-		assertEquals(6, reference.items.size());
+		Set<String> set = new HashSet<>();
+		reference.items.forEach(v -> set.add(v.name));
+		assertTrue(set.contains("vs_1"));
+		assertTrue(set.contains("vs_2"));
+		assertTrue(set.contains("vs_3"));
+		assertTrue(set.contains("vs_4"));
+		assertTrue(set.contains("vs_5"));
+		assertTrue(set.contains("vs_6"));
 	}
 	
 	@Test
@@ -43,13 +61,20 @@ public class TestSDKQuery extends TestSDK {
 		assertEquals(vs.name, "vs_2");
 		assertEquals(vs.destination, "/Common/10.1.10.12:80");
 		assertEquals(vs.ipProtocol, "tcp");
-		assertEquals(vs.sourceAddressTranslation.type, "automap");
+		assertEquals(vs.sourceAddressTranslation.type, "snat");
 	}
 	
 	@Test
 	public void listAllNodes() {
 		NodesReference reference = Wrapper.create(HOST, USER, PASSWORD).listAllNodes();
-		assertEquals(14, reference.items.size());
+		Set<String> set = new HashSet<>();
+		reference.items.forEach(n -> set.add(n.name));
+		assertTrue(set.contains("10.1.20.11"));
+		assertTrue(set.contains("10.1.20.12"));
+		assertTrue(set.contains("10.1.20.13"));
+		assertTrue(set.contains("10.1.20.14"));
+		assertTrue(set.contains("10.1.20.15"));
+		assertTrue(reference.items.size() >= 14);
 	}
 	
 	@Test
@@ -61,13 +86,31 @@ public class TestSDKQuery extends TestSDK {
 	@Test
 	public void listAllPools() {
 		PoolsReference reference = Wrapper.create(HOST, USER, PASSWORD).listAllPools();
-		assertEquals(8, reference.items.size());
+		Set<String> set = new HashSet<>();
+		reference.items.forEach(p -> set.add(p.name));
+		assertTrue(set.contains("pool_1"));
+		assertTrue(set.contains("pool_2"));
+		assertTrue(set.contains("pool_3"));
+		assertTrue(set.contains("pool_4"));
+		assertTrue(set.contains("pool_5"));
+		assertTrue(set.contains("pool_6"));
+		assertTrue(set.contains("pool_7"));
+		assertTrue(set.contains("pool_8"));
 	}
 	
 	@Test
 	public void listAllPoolsExpandSubcollections() {
 		PoolsReference reference = Wrapper.create(HOST, USER, PASSWORD).listAllPoolsExpandSubcollections();
-		assertEquals(8, reference.items.size());
+		Set<String> set = new HashSet<>();
+		reference.items.forEach(p -> set.add(p.name));
+		assertTrue(set.contains("pool_1"));
+		assertTrue(set.contains("pool_2"));
+		assertTrue(set.contains("pool_3"));
+		assertTrue(set.contains("pool_4"));
+		assertTrue(set.contains("pool_5"));
+		assertTrue(set.contains("pool_6"));
+		assertTrue(set.contains("pool_7"));
+		assertTrue(set.contains("pool_8"));
 	}
 	
 	@Test

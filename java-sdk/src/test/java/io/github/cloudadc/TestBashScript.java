@@ -3,6 +3,8 @@ package io.github.cloudadc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.concurrent.TimeUnit;
+
 import org.junit.Test;
 
 import io.github.cloudadc.iControl.model.BashResponse;
@@ -44,7 +46,7 @@ public class TestBashScript extends TestSDK {
 	}
 	
 	@Test
-	public void testBashScriptBatchNodeState() {
+	public void testBashScriptBatchNodeState() throws InterruptedException {
 		
 		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
 		
@@ -66,6 +68,8 @@ public class TestBashScript extends TestSDK {
 		bash = "tmsh modify ltm node 10.1.20.11 state user-up; tmsh modify ltm node 10.1.20.12 state user-up;tmsh modify ltm node 10.1.20.13 state user-up";
 		resp = w.bashScripts(bash);
 		assertTrue(resp.utilCmdArgs.contains(bash));
+		
+		TimeUnit.SECONDS.sleep(3);
 		
 		n1 = w.getNodeByName("10.1.20.11");
 		n2 = w.getNodeByName("10.1.20.12");

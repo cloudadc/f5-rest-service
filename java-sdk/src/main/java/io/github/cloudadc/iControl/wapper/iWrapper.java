@@ -17,6 +17,82 @@ import static io.github.cloudadc.iControl.wapper.Type.*;
 
 public interface iWrapper {
 	
+	public static String PARENTHESIS_LEFT = "{";
+	
+	public static String PARENTHESIS_RIGHT = "}";
+	
+	public static String QUOTE = "\"";
+		
+	public static String COMMA = ",";
+	
+	public static String COLON = ":";
+	
+	public static String SPACE = " ";
+	
+	public static String REPLACEMENT_POOL = "REPLACEMENT_POOL";
+	
+	public static String REPLACEMENT_MONITOR = "REPLACEMENT_MONITOR";
+	
+	public static String REPLACEMENT_LOADBALANCEINGNODE = "REPLACEMENT_LOADBALANCEINGNODE";
+	
+	public static String REPLACEMENT_MEMBERS = "REPLACEMENT_MEMBERS";
+	
+	public static String POOL_TEMPLATE = "{\"name\":\"REPLACEMENT_POOL\",\"monitor\": \"REPLACEMENT_MONITOR\", \"loadBalancingMode\": \"REPLACEMENT_LOADBALANCEINGNODE\", \"members\":[ REPLACEMENT_MEMBERS ] }";
+	
+	public static String REPLACEMENT_VS_NAME = "REPLACEMENT_VS_NAME";
+	
+	public static String REPLACEMENT_DESTINATION = "REPLACEMENT_DESTINATION";
+	
+	public static String REPLACEMENT_VS_POOL = "REPLACEMENT_VS_POOL";
+	
+	public static String REPLACEMENT_VS_PERSIST = "REPLACEMENT_VS_PERSIST";
+	
+	public static String VS_TEMPLATE_FASTL4 = "{\"name\": \"REPLACEMENT_VS_NAME\", \"destination\": \"REPLACEMENT_DESTINATION\", \"mask\": \"255.255.255.255\", \"pool\": \"REPLACEMENT_VS_POOL\"}";
+	
+	public static String VS_TEMPLATE_FASTL4_PERSIST = "{\"name\": \"REPLACEMENT_VS_NAME\", \"destination\": \"REPLACEMENT_DESTINATION\", \"mask\": \"255.255.255.255\", \"pool\": \"REPLACEMENT_VS_POOL\", \"persist\": [ {\"name\": \"REPLACEMENT_VS_PERSIST\"} ] }";
+	
+	@iType(category = LTM, type = POST)
+	public Pool createPool(String name, String loadBalancingMode, String monitor, String[] members);
+	
+	@iType(category = LTM, type = POST)
+	public Pool createPool(String name, String loadBalancingMode, String monitor, String[] members, long transId);
+	
+	@iType(category = LTM, type = POST)
+	public Pool createPool(String payload);
+	
+	@iType(category = LTM, type = POST)
+	public Pool createPool(String payload, long transId);
+	
+	@iType(category = LTM, type = DELETE)
+	public Object deletePool(String name);
+	
+	@iType(category = LTM, type = DELETE)
+	public Object deletePool(String name, long transId);
+	
+	@iType(category = LTM, type = POST, description = "fastl4 vs, without persist")
+	public VirtualServer createVirtualServer(String name, String destination, String pool);
+	
+	@iType(category = LTM, type = POST, description = "fastl4 vs, without persist")
+	public VirtualServer createVirtualServer(String name, String destination, String pool, long transId);
+	
+	@iType(category = LTM, type = POST, description = "fastl4 vs, with persist")
+	public VirtualServer createVirtualServer(String name, String destination, String pool, String persist);
+	
+	@iType(category = LTM, type = POST, description = "fastl4 vs, with persist")
+	public VirtualServer createVirtualServer(String name, String destination, String pool, String persist, long transId);
+	
+	@iType(category = LTM, type = POST, description = "create vs via post body")
+	public VirtualServer createVirtualServer(String payload);
+	
+	@iType(category = LTM, type = POST, description = "create vs via post body")
+	public VirtualServer createVirtualServer(String payload, long transId);
+	
+	@iType(category = LTM, type = DELETE)
+	public Object deleteVirtualServer(String name);
+	
+	@iType(category = LTM, type = DELETE)
+	public Object deleteVirtualServer(String name, long transId);
+	
 	/**
 	 * List All Virtual Servers
 	 * @return A warper object of all Virtual Servers, which contains a items represent all Virtual Servers

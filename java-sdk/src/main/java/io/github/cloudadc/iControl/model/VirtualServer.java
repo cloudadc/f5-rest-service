@@ -1,5 +1,7 @@
 package io.github.cloudadc.iControl.model;
 
+import java.util.List;
+
 public class VirtualServer {
 	
 	public String kind;
@@ -12,8 +14,11 @@ public class VirtualServer {
     public String autoLasthop;
     public String cmpEnabled;
     public int connectionLimit;
+    public String description;
     public String destination;
     public boolean enabled;
+    public String fallbackPersistence;
+    public FallbackPersistenceReference fallbackPersistenceReference;
     public int gtmScore;
     public String ipProtocol;
     public String mask;
@@ -35,7 +40,18 @@ public class VirtualServer {
     public String translatePort;
     public boolean vlansDisabled;
     public int vsIndex;
+    public List<String> rules;
+    public List<RulesReference> rulesReference;
+    public List<Persist> persist;
     public PoliciesReference policiesReference;
     public ProfilesReference profilesReference;
-
+    
+    
+    
+   
+    
+    
+ 
+   
+    
 }

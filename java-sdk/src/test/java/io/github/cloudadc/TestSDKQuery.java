@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.cloudadc.iControl.model.Member;
@@ -139,6 +140,14 @@ public class TestSDKQuery extends TestSDK {
 	public void getMemberByName() {
 		Member m = Wrapper.create(HOST, USER, PASSWORD).getMemberByName("pool_1", "10.1.20.11:8081");
 		assertNotNull(m);
+	}
+	
+	@Ignore
+	@Test
+	public void testVirtualServerPersist() {
+		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
+		VirtualServer vs = w.getVirtualServerByName("test_vs");
+		assertNotNull(vs);
 	}
 	
 }

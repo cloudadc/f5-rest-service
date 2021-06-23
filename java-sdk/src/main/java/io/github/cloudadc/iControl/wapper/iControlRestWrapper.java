@@ -332,4 +332,110 @@ public class iControlRestWrapper extends Wrapper{
 		return respList;
 	}
 
+	@Override
+	public Pool createPool(String name, String loadBalancingMode, String monitor, String[] members) {
+		return createPool(name, loadBalancingMode, monitor, members, -1);
+	}
+	
+	@Override
+	public Pool createPool(String name, String loadBalancingMode, String monitor, String[] members, long transId) {
+		
+		boolean first = true;
+		StringBuffer sb = new StringBuffer();
+		for (String member : members) {
+			
+			if(first) {
+				first = false;
+			} else {
+				sb.append(COMMA).append(SPACE);
+			}
+
+			sb.append(PARENTHESIS_LEFT).append(QUOTE).append("name").append(QUOTE).append(COLON).append(SPACE).append(QUOTE).append(member).append(QUOTE).append(PARENTHESIS_RIGHT);
+		}
+		
+		String json = POOL_TEMPLATE.replaceAll(REPLACEMENT_POOL, name).replaceAll(REPLACEMENT_MONITOR, monitor).replaceAll(REPLACEMENT_LOADBALANCEINGNODE, loadBalancingMode).replaceAll(REPLACEMENT_MEMBERS, sb.toString());
+		
+		if(transId > 0) {
+			return doPost("/mgmt/tm/ltm/pool", json, Pool.class, transactionHeaders(transId));
+		} else {
+			return doPost("/mgmt/tm/ltm/pool", json, Pool.class);
+		}
+	}
+
+	@Override
+	public Pool createPool(String json) {
+		return doPost("/mgmt/tm/ltm/pool", json, Pool.class);
+	}
+	
+	@Override
+	public Pool createPool(String json, long transId) {
+		return doPost("/mgmt/tm/ltm/pool", json, Pool.class, transactionHeaders(transId));
+	}
+
+	@Override
+	public Object deletePool(String name) {
+		return doDelete("/mgmt/tm/ltm/pool/" + name, Object.class);
+	}
+
+	@Override
+	public Object deletePool(String name, long transId) {
+		return doDelete("/mgmt/tm/ltm/pool/" + name, Object.class, transactionHeaders(transId));
+	}
+
+	@Override
+	public VirtualServer createVirtualServer(String name, String destination, String pool) {
+		return createVirtualServer(name, destination, pool, -1);
+	}
+
+	@Override
+	public VirtualServer createVirtualServer(String name, String destination, String pool, long transId) {
+		
+		String json = VS_TEMPLATE_FASTL4.replaceAll(REPLACEMENT_VS_NAME, name).replaceAll(REPLACEMENT_DESTINATION, destination).replaceAll(REPLACEMENT_VS_POOL, pool);
+		if(transId > 0) {
+			return doPost("/mgmt/tm/ltm/virtual", json, VirtualServer.class, transactionHeaders(transId));
+		} else {
+			return doPost("/mgmt/tm/ltm/virtual", json, VirtualServer.class);
+		}
+	}
+
+	@Override
+	public VirtualServer createVirtualServer(String name, String destination, String pool, String persist) {
+		return createVirtualServer(name, destination, pool, persist, -1);
+	}
+
+	@Override
+	public VirtualServer createVirtualServer(String name, String destination, String pool, String persist, long transId) {
+		
+		String json = VS_TEMPLATE_FASTL4_PERSIST.replaceAll(REPLACEMENT_VS_NAME, name).replaceAll(REPLACEMENT_DESTINATION, destination).replaceAll(REPLACEMENT_VS_POOL, pool).replaceAll(REPLACEMENT_VS_PERSIST, persist);
+		if(transId > 0) {
+			return doPost("/mgmt/tm/ltm/virtual", json, VirtualServer.class, transactionHeaders(transId));
+		} else {
+			return doPost("/mgmt/tm/ltm/virtual", json, VirtualServer.class);
+		}
+	}
+
+	@Override
+	public VirtualServer createVirtualServer(String json) {
+		return doPost("/mgmt/tm/ltm/virtual", json, VirtualServer.class);
+	}
+
+	@Override
+	public VirtualServer createVirtualServer(String json, long transId) {
+		return doPost("/mgmt/tm/ltm/virtual", json, VirtualServer.class, transactionHeaders(transId));
+	}
+
+	@Override
+	public Object deleteVirtualServer(String name) {
+		return doDelete("/mgmt/tm/ltm/virtual/" + name, Object.class);
+	}
+
+	@Override
+	public Object deleteVirtualServer(String name, long transId) {
+		return doDelete("/mgmt/tm/ltm/virtual/" + name, Object.class, transactionHeaders(transId));
+	}
+
+	
+
+	
+
 }

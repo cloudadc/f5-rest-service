@@ -8,4 +8,8 @@ public class ApiInvocationException extends RuntimeException {
 	public ApiInvocationException(Throwable cause) {
 		super(cause);
 	}
+	
+	public ApiInvocationException(String message) {
+		super(message);
+	}
 }

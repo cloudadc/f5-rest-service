@@ -103,7 +103,12 @@ public abstract class Wrapper implements iWrapper {
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {
 				ObjectMapper om = new ObjectMapper();
-				return om.readValue(response.getEntity().getContent(), valueType);
+				if(response.getStatusLine().getStatusCode() == 200)  {
+					return om.readValue(response.getEntity().getContent(), valueType);
+				} else {
+					Object obj = om.readValue(response.getEntity().getContent(), Object.class);
+					throw new ApiInvocationException(obj.toString());
+				}
 			}
 		} catch (Exception e) {
 			throw new ApiInvocationException(e);
@@ -152,10 +157,17 @@ public abstract class Wrapper implements iWrapper {
 		});
 		request.setEntity(new StringEntity(payload, ContentType.APPLICATION_JSON));
 		
+		logger.info(request.toString() + " payload: " + payload);
+		
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {
 				ObjectMapper om = new ObjectMapper();
-				return om.readValue(response.getEntity().getContent(), valueType);
+				if(response.getStatusLine().getStatusCode() == 200)  {
+					return om.readValue(response.getEntity().getContent(), valueType);
+				} else {
+					Object obj = om.readValue(response.getEntity().getContent(), Object.class);
+					throw new ApiInvocationException(obj.toString());
+				}
 			}
 		} catch (Exception e) {
 			throw new ApiInvocationException(e);
@@ -164,21 +176,33 @@ public abstract class Wrapper implements iWrapper {
 	}
 	
 	protected <T> T doDelete(String url, Class<T> valueType) {
+		return doDelete(url, valueType, Collections.<String, String>emptyMap());
+	}
+	
+    protected <T> T doDelete(String url, Class<T> valueType, Map<String, String> headers) {
 		
 		HttpDelete request = new HttpDelete(getBaseURL() + url);
 		request.setHeader(HttpHeaders.ACCEPT, APPLICATION_JSON);
 		request.addHeader(HttpHeaders.USER_AGENT, USER_AGENT);
+		headers.keySet().forEach(key -> {
+			request.addHeader(key, headers.get(key));
+		});
 		
 		logger.info(request.toString());		
 		
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {
 				ObjectMapper om = new ObjectMapper();
-				return om.readValue(response.getEntity().getContent(), valueType);
+				if(response.getStatusLine().getStatusCode() == 200) {
+					return om.readValue(SUCCESS, valueType);
+				} else {
+					return om.readValue(response.getEntity().getContent(), valueType);
+				}
 			}
 		} catch (Exception e) {
 			throw new ApiInvocationException(e);
 		} 
 	}
+
 
 }

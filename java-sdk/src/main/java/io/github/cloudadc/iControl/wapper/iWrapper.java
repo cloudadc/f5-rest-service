@@ -7,6 +7,8 @@ import io.github.cloudadc.iControl.model.Node;
 import io.github.cloudadc.iControl.model.NodesReference;
 import io.github.cloudadc.iControl.model.Pool;
 import io.github.cloudadc.iControl.model.PoolsReference;
+import io.github.cloudadc.iControl.model.SnatPool;
+import io.github.cloudadc.iControl.model.SnatPoolReference;
 import io.github.cloudadc.iControl.model.Transaction;
 import io.github.cloudadc.iControl.model.TransactionReference;
 import io.github.cloudadc.iControl.model.VirtualServer;
@@ -68,6 +70,30 @@ public interface iWrapper {
 	
 	@iType(category = LTM, type = DELETE)
 	public Object deletePool(String name, long transId);
+	
+	@iType(category = LTM, type = GET)
+	public SnatPoolReference listAllSnatPools();
+	
+	@iType(category = LTM, type = GET)
+	public SnatPool getSnatPoolByName(String name);
+	
+	@iType(category = LTM, type = POST)
+	public SnatPool createSnatPool(String name, String[] members);
+	
+	@iType(category = LTM, type = POST)
+	public SnatPool createSnatPool(String name, String[] members, long transId);
+	
+	@iType(category = LTM, type = POST)
+	public SnatPool createSnatPool(String payload);
+	
+	@iType(category = LTM, type = POST)
+	public SnatPool createSnatPool(String payload, long transId);
+	
+	@iType(category = LTM, type = DELETE)
+	public Object deleteSnatPool(String name);
+	
+	@iType(category = LTM, type = DELETE)
+	public Object deleteSnatPool(String name, long transId);
 	
 	@iType(category = LTM, type = POST, description = "fastl4 vs, without persist")
 	public VirtualServer createVirtualServer(String name, String destination, String pool);

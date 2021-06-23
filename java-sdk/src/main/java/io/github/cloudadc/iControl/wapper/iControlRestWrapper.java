@@ -21,6 +21,8 @@ import io.github.cloudadc.iControl.model.Node;
 import io.github.cloudadc.iControl.model.NodesReference;
 import io.github.cloudadc.iControl.model.Pool;
 import io.github.cloudadc.iControl.model.PoolsReference;
+import io.github.cloudadc.iControl.model.SnatPool;
+import io.github.cloudadc.iControl.model.SnatPoolReference;
 import io.github.cloudadc.iControl.model.Transaction;
 import io.github.cloudadc.iControl.model.TransactionReference;
 import io.github.cloudadc.iControl.model.VirtualServer;
@@ -432,6 +434,52 @@ public class iControlRestWrapper extends Wrapper{
 	@Override
 	public Object deleteVirtualServer(String name, long transId) {
 		return doDelete("/mgmt/tm/ltm/virtual/" + name, Object.class, transactionHeaders(transId));
+	}
+
+	@Override
+	public SnatPoolReference listAllSnatPools() {
+		return doGet("/mgmt/tm/ltm/snatpool", SnatPoolReference.class);
+	}
+
+	@Override
+	public SnatPool getSnatPoolByName(String name) {
+		return doGet("/mgmt/tm/ltm/snatpool/" + name, SnatPool.class);
+	}
+
+	@Override
+	public SnatPool createSnatPool(String name, String[] members) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SnatPool createSnatPool(String name, String[] members, long transId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SnatPool createSnatPool(String payload) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SnatPool createSnatPool(String payload, long transId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object deleteSnatPool(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object deleteSnatPool(String name, long transId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

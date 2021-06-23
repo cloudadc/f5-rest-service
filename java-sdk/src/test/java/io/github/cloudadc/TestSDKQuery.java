@@ -16,6 +16,8 @@ import io.github.cloudadc.iControl.model.Node;
 import io.github.cloudadc.iControl.model.NodesReference;
 import io.github.cloudadc.iControl.model.Pool;
 import io.github.cloudadc.iControl.model.PoolsReference;
+import io.github.cloudadc.iControl.model.SnatPool;
+import io.github.cloudadc.iControl.model.SnatPoolReference;
 import io.github.cloudadc.iControl.model.VirtualServer;
 import io.github.cloudadc.iControl.model.VirtualServersReference;
 import io.github.cloudadc.iControl.wapper.Wrapper;
@@ -148,6 +150,24 @@ public class TestSDKQuery extends TestSDK {
 		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
 		VirtualServer vs = w.getVirtualServerByName("test_vs");
 		assertNotNull(vs);
+	}
+	
+	@Test
+	public void listAllSnatPools() {
+		SnatPoolReference reference = Wrapper.create(HOST, USER, PASSWORD).listAllSnatPools();
+		Set<String> set = new HashSet<>();
+		reference.items.forEach(s -> set.add(s.name));
+		assertTrue(set.contains("snat_1"));
+		assertTrue(set.contains("snat_2"));
+		assertTrue(set.contains("snat_3"));
+	}
+	
+	@Test
+	public void getSnatPoolByName() {
+		
+		SnatPool p = Wrapper.create(HOST, USER, PASSWORD).getSnatPoolByName("snat_1");
+		assertTrue(p.members.contains("/Common/10.1.10.103"));
+		assertTrue(p.members.contains("/Common/10.1.10.104"));
 	}
 	
 }

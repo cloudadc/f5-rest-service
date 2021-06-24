@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import io.github.cloudadc.iControl.model.Pool;
+import io.github.cloudadc.iControl.model.SnatPool;
 import io.github.cloudadc.iControl.model.VirtualServer;
 import io.github.cloudadc.iControl.wapper.Wrapper;
 
@@ -61,7 +62,55 @@ public class TestSDKCreate extends TestSDK {
 		w.bashScripts("tmsh delete ltm pool pool_test_1");
 	
 		w.shutdown();
-	} 
+	}
+	
+	@Test
+	public void testCreateSNATPool() {
+		
+		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
+		
+		w.createSnatPool("snat_test_1", new String[] {"10.1.10.109", "10.1.10.110"});
+		
+		SnatPool p = w.getSnatPoolByName("snat_test_1");
+		assertTrue(p.members.contains("/Common/10.1.10.109"));
+		assertTrue(p.members.contains("/Common/10.1.10.110"));
+		
+		w.deleteSnatPool("snat_test_1");
+		
+		w.shutdown();
+	}
+	
+	@Test
+	public void testCreateSNATPoolJSON() {
+		
+		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
+		
+		w.createSnatPool("{\"name\":\"snat_test_1\",\"members\":[\"10.1.10.109\", \"10.1.10.110\"]}");
+		
+		SnatPool p = w.getSnatPoolByName("snat_test_1");
+		assertTrue(p.members.contains("/Common/10.1.10.109"));
+		assertTrue(p.members.contains("/Common/10.1.10.110"));
+		
+		w.deleteSnatPool("snat_test_1");
+		
+		w.shutdown();
+	}
+	
+	@Test
+	public void testCreateSNATPoolBash() {
+		
+		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
+		
+		w.bashScripts("tmsh create ltm snatpool snat_test_1 { members add { 10.1.10.109} members add { 10.1.10.110} }");
+		
+		SnatPool p = w.getSnatPoolByName("snat_test_1");
+		assertTrue(p.members.contains("/Common/10.1.10.109"));
+		assertTrue(p.members.contains("/Common/10.1.10.110"));
+		
+		w.bashScripts("tmsh delete ltm snatpool snat_test_1");
+		
+		w.shutdown();
+	}
 	
 	@Test
 	public void testCreateVSFastL4() {

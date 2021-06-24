@@ -92,13 +92,18 @@ public abstract class Wrapper implements iWrapper {
 		return map;
 	}
 	
+	protected void println(String msg) {
+		System.out.println(msg);
+		logger.debug(msg);
+	}
+	
 	protected <T> T doGet(String url, Class<T> valueType) {
 		
 		HttpGet request = new HttpGet(getBaseURL() + url);
 		request.setHeader(HttpHeaders.ACCEPT, APPLICATION_JSON);
 		request.addHeader(HttpHeaders.USER_AGENT, USER_AGENT);
 		
-		logger.info(request.toString());		
+		println(request.toString());		
 		
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {
@@ -130,7 +135,7 @@ public abstract class Wrapper implements iWrapper {
 		});
 		request.setEntity(new StringEntity(payload, ContentType.APPLICATION_JSON));
 		
-		logger.info(request.toString());
+		println(request.toString() + " payload: " + payload);
 		
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {
@@ -157,7 +162,7 @@ public abstract class Wrapper implements iWrapper {
 		});
 		request.setEntity(new StringEntity(payload, ContentType.APPLICATION_JSON));
 		
-		logger.info(request.toString() + " payload: " + payload);
+		println(request.toString() + " payload: " + payload);
 		
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {
@@ -188,7 +193,7 @@ public abstract class Wrapper implements iWrapper {
 			request.addHeader(key, headers.get(key));
 		});
 		
-		logger.info(request.toString());		
+		println(request.toString());		
 		
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {

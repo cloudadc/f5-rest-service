@@ -448,38 +448,51 @@ public class iControlRestWrapper extends Wrapper{
 
 	@Override
 	public SnatPool createSnatPool(String name, String[] members) {
-		// TODO Auto-generated method stub
-		return null;
+		return createSnatPool(name, members, -1);
 	}
 
 	@Override
 	public SnatPool createSnatPool(String name, String[] members, long transId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		boolean first = true;
+		StringBuffer sb = new StringBuffer();
+		for (String member : members) {
+			
+			if(first) {
+				first = false;
+			} else {
+				sb.append(COMMA).append(SPACE);
+			}
+
+			sb.append(QUOTE).append(member).append(QUOTE);
+		}
+		
+		String json = SNATPOOL_TEMPLATE.replaceAll(REPLACEMENT_SNATPOOL_NAME, name).replaceAll(REPLACEMENT_SNATPOOL_MEMBERS, sb.toString());
+		if(transId > 0) {
+			return doPost("/mgmt/tm/ltm/snatpool", json, SnatPool.class, transactionHeaders(transId));
+		} else {
+			return doPost("/mgmt/tm/ltm/snatpool", json, SnatPool.class);
+		}
 	}
 
 	@Override
-	public SnatPool createSnatPool(String payload) {
-		// TODO Auto-generated method stub
-		return null;
+	public SnatPool createSnatPool(String json) {
+		return doPost("/mgmt/tm/ltm/snatpool", json, SnatPool.class);
 	}
 
 	@Override
-	public SnatPool createSnatPool(String payload, long transId) {
-		// TODO Auto-generated method stub
-		return null;
+	public SnatPool createSnatPool(String json, long transId) {
+		return doPost("/mgmt/tm/ltm/snatpool", json, SnatPool.class, transactionHeaders(transId));
 	}
 
 	@Override
 	public Object deleteSnatPool(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return doDelete("/mgmt/tm/ltm/snatpool/" + name, Object.class);
 	}
 
 	@Override
 	public Object deleteSnatPool(String name, long transId) {
-		// TODO Auto-generated method stub
-		return null;
+		return doDelete("/mgmt/tm/ltm/snatpool/" + name, Object.class, transactionHeaders(transId));
 	}
 
 	

@@ -41,6 +41,12 @@ public interface iWrapper {
 	
 	public static String POOL_TEMPLATE = "{\"name\":\"REPLACEMENT_POOL\",\"monitor\": \"REPLACEMENT_MONITOR\", \"loadBalancingMode\": \"REPLACEMENT_LOADBALANCEINGNODE\", \"members\":[ REPLACEMENT_MEMBERS ] }";
 	
+	public static String REPLACEMENT_SNATPOOL_NAME = "REPLACEMENT_SNATPOOL_NAME";
+	
+	public static String REPLACEMENT_SNATPOOL_MEMBERS = "REPLACEMENT_SNATPOOL_MEMBERS";
+	
+	public static String SNATPOOL_TEMPLATE = "{\"name\":\"REPLACEMENT_SNATPOOL_NAME\",\"members\":[REPLACEMENT_SNATPOOL_MEMBERS]}";
+	
 	public static String REPLACEMENT_VS_NAME = "REPLACEMENT_VS_NAME";
 	
 	public static String REPLACEMENT_DESTINATION = "REPLACEMENT_DESTINATION";
@@ -242,7 +248,7 @@ public interface iWrapper {
 	@iType(category = LTM, type = GET)
 	public Transaction transactionStatus(long transId);
 	
-	@iType(category = LTM, type = PATCH)
+	@iType(category = LTM, type = PATCH, description = "remove transaction from internal DB")
 	public Object transactionRevoke(long transId);
 	
 	@iType(category = LTM, type = PATCH)

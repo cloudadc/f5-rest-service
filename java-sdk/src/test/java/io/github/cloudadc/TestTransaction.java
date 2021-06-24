@@ -76,6 +76,11 @@ public class TestTransaction extends TestSDK {
 		
 		w.nodeEnable("10.1.20.13");
 		w.nodeEnable("10.1.20.14");
+		
+		t = w.transactionStatus(t.transId);
+		assertEquals(t.state, "COMPLETED");
+		
+		w.transactionRevoke(t.transId);
 
 	}
 }

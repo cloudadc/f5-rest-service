@@ -1,0 +1,30 @@
+= AS3 API CURL Demonstration
+:toc: manual
+
+== Installation Verification
+
+[source, bash]
+----
+$ curl -k -u 'admin:admin' -H "accept: application/json" https://10.1.1.133/mgmt/shared/appsvcs/info 
+{
+  "version": "3.28.0",
+  "release": "3",
+  "schemaCurrent": "3.28.0",
+  "schemaMinimum": "3.0.0"
+}
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----
+
+[source, bash]
+----
+
+----

@@ -4,13 +4,32 @@ A Java SDK for link:https://clouddocs.f5.com/api/icontrol-rest[F5 iControlRest].
 
 == Supported API
 
-* BIQ
-** link:README.adoc[TODO]
-
 * DNS
 ** link:README.adoc[TODO]
 
 * LTM
+** link:README.adoc[createPool]
+** link:README.adoc[createPool]
+** link:README.adoc[createPool]
+** link:README.adoc[createPool]
+** link:README.adoc[deletePool]
+** link:README.adoc[deletePool]
+** link:README.adoc[listAllSnatPools]
+** link:README.adoc[getSnatPoolByName]
+** link:README.adoc[createSnatPool]
+** link:README.adoc[createSnatPool]
+** link:README.adoc[createSnatPool]
+** link:README.adoc[createSnatPool]
+** link:README.adoc[deleteSnatPool]
+** link:README.adoc[deleteSnatPool]
+** link:README.adoc[createVirtualServer]
+** link:README.adoc[createVirtualServer]
+** link:README.adoc[createVirtualServer]
+** link:README.adoc[createVirtualServer]
+** link:README.adoc[createVirtualServer]
+** link:README.adoc[createVirtualServer]
+** link:README.adoc[deleteVirtualServer]
+** link:README.adoc[deleteVirtualServer]
 ** link:README.adoc[listAllVirtualServers]
 ** link:README.adoc[listAllVirtualServersExpandSubcollections]
 ** link:README.adoc[getVirtualServerByName]
@@ -53,6 +72,9 @@ A Java SDK for link:https://clouddocs.f5.com/api/icontrol-rest[F5 iControlRest].
 ** link:README.adoc[transactionCommit]
 ** link:README.adoc[listAllTransaction]
 ** link:README.adoc[bashScripts]
+
+* BIQ
+** link:README.adoc[TODO]
 
 == Build
 

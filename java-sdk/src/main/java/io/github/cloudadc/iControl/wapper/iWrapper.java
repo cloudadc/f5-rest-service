@@ -125,21 +125,12 @@ public interface iWrapper {
 	@iType(category = LTM, type = DELETE)
 	public Object deleteVirtualServer(String name, long transId);
 	
-	/**
-	 * List All Virtual Servers
-	 * @return A warper object of all Virtual Servers, which contains a items represent all Virtual Servers
-	 */
 	@iType(category = LTM, type = GET, description = "List All Virtual Servers")
 	public VirtualServersReference listAllVirtualServers() ;
 	
 	@iType(category = LTM, type = GET)
 	public VirtualServersReference listAllVirtualServersExpandSubcollections();
 	
-	/**
-	 * Get Virtual Server by name
-	 * @param vs - the Virtual Server name
-	 * @return A warper object of Virtual Server
-	 */
 	@iType(category = LTM, type = GET)
 	public VirtualServer getVirtualServerByName(String vsName);
 	
@@ -165,7 +156,7 @@ public interface iWrapper {
 	public Object nodeUp(String nodeName);
 	
 	@iType(category = LTM, type = PATCH)
-    public Object nodeDiable(String[] nodeNames);
+        public Object nodeDiable(String[] nodeNames);
 	
 	@iType(category = LTM, type = PATCH)
 	public Object nodeEnable(String[] nodeNames);
@@ -177,7 +168,7 @@ public interface iWrapper {
 	public Object nodeUp(String[] nodeNames);
 	
 	@iType(category = LTM, type = PATCH)
-    public Object nodeDiable(String nodeName, long transId);
+        public Object nodeDiable(String nodeName, long transId);
 	
 	@iType(category = LTM, type = PATCH)
 	public Object nodeEnable(String nodeName, long transId);
@@ -231,13 +222,13 @@ public interface iWrapper {
 	public Object memberUp(String poolName, String[] memberNames);
 	
 	@iType(category = LTM, type = PATCH)
-    public Object memberDisable(String poolName, String memberName, long transId);
+        public Object memberDisable(String poolName, String memberName, long transId);
 	
 	@iType(category = LTM, type = PATCH)
 	public Object memberEnable(String poolName, String memberName, long transId);
 	
 	@iType(category = LTM, type = PATCH)
-    public Object memberOffline(String poolName, String memberName, long transId);
+        public Object memberOffline(String poolName, String memberName, long transId);
 	
 	@iType(category = LTM, type = PATCH)
 	public Object memberUp(String poolName, String memberName, long transId);

@@ -1,0 +1,681 @@
+= AS3 API CURL Demonstration
+:toc: manual
+
+== Quick Start
+
+[source, bash]
+----
+$ curl -s -k -u 'admin:F5demo@666'  -H "Content-Type: application/json" https://10.1.10.240/mgmt/shared/appsvcs/declare -X POST -d "$(cat sample01.json)" | jq
+{
+  "results": [
+    {
+      "code": 200,
+      "message": "success",
+      "lineCount": 25,
+      "host": "localhost",
+      "tenant": "Sample_01",
+      "runTime": 2376
+    }
+  ],
+  "declaration": {
+    "class": "ADC",
+    "schemaVersion": "3.18.0",
+    "id": "urn:uuid:33045210-3ab8-4636-9b2a-c98d22ab915d",
+    "label": "Sample 1",
+    "remark": "Simple HTTP Service with Round-Robin Load Balancing",
+    "Sample_01": {
+      "class": "Tenant",
+      "A1": {
+        "class": "Application",
+        "template": "generic",
+        "service": {
+          "class": "Service_HTTP",
+          "virtualAddresses": [
+            "10.0.1.10"
+          ],
+          "pool": "web_pool"
+        },
+        "web_pool": {
+          "class": "Pool",
+          "monitors": [
+            "http"
+          ],
+          "members": [
+            {
+              "servicePort": 80,
+              "serverAddresses": [
+                "192.0.1.10",
+                "192.0.1.11"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "updateMode": "selective",
+    "controls": {
+      "archiveTimestamp": "2022-04-08T12:25:33.930Z"
+    }
+  }
+}
+----
+
+link:sample01.json[sample01.json]
+
+== API Operation
+
+=== Settings
+
+[source, bash]
+----
+GET  https://<IP>/mgmt/shared/appsvcs/settings
+POST https://<IP>/mgmt/shared/appsvcs/settings
+----
+
+[source, bash]
+.*add setting*
+----
+
+----
+
+[source, bash]
+.*get setting*
+----
+
+----
+
+=== Information
+
+[source, bash]
+----
+GET  https://<IP>/mgmt/shared/appsvcs/info
+----
+
+[source, bash]
+.*Example*
+----
+curl -s -k -u 'admin:F5demo@666' https://10.1.10.240/mgmt/shared/appsvcs/info | jq
+----
+
+=== API POST
+
+[source, bash]
+----
+POST https://<IP>/mgmt/shared/appsvcs/declare
+POST https://<IP>/mgmt/shared/appsvcs/declare/tenant1,tenant2
+----
+
+[source, bash]
+----
+$ curl -s -k -u 'admin:F5demo@666'  -H "Content-Type: application/json" https://10.1.10.240/mgmt/shared/appsvcs/declare -X POST -d "$(cat declaration.json)" | jq
+{
+  "results": [
+    {
+      "code": 200,
+      "message": "success",
+      "lineCount": 47,
+      "host": "localhost",
+      "tenant": "test001",
+      "runTime": 1530
+    }
+  ],
+  "declaration": {
+    "class": "ADC",
+    "schemaVersion": "3.18.0",
+    "id": "f5-bigip-confgimap",
+    "label": "f5-bigip-confgimap",
+    "test001": {
+      "class": "Tenant",
+      "test001_1": {
+        "class": "Application",
+        "template": "generic",
+        "app_svc_vs": {
+          "class": "Service_TCP",
+          "persistenceMethods": [
+            "source-address"
+          ],
+          "virtualAddresses": [
+            "192.168.5.50"
+          ],
+          "profileTCP": {
+            "use": "customTCPProfile"
+          },
+          "snat": "self",
+          "virtualPort": 80,
+          "mirroring": "L4",
+          "pool": "test001_app_1_svc_pool"
+        },
+        "customTCPProfile": {
+          "class": "TCP_Profile",
+          "idleTimeout": 600
+        },
+        "test001_app_1_svc_pool": {
+          "class": "Pool",
+          "monitors": [
+            "tcp"
+          ],
+          "loadBalancingMode": "least-connections-member",
+          "members": [
+            {
+              "servicePort": 80,
+              "serverAddresses": [
+                "192.0.1.12",
+                "192.0.1.13"
+              ]
+            }
+          ]
+        }
+      },
+      "test001_2": {
+        "class": "Application",
+        "template": "generic",
+        "app_svc_vs": {
+          "class": "Service_HTTP",
+          "persistenceMethods": [
+            "cookie"
+          ],
+          "virtualAddresses": [
+            "192.168.5.51"
+          ],
+          "profileHTTP": {
+            "use": "customHTTPProfile"
+          },
+          "profileMultiplex": {
+            "use": "custoOneConnectProfile"
+          },
+          "snat": "self",
+          "virtualPort": 80,
+          "pool": "test001_app_2_svc_pool"
+        },
+        "customHTTPProfile": {
+          "class": "HTTP_Profile",
+          "xForwardedFor": true
+        },
+        "custoOneConnectProfile": {
+          "class": "Multiplex_Profile",
+          "sourceMask": "255.255.255.255",
+          "maxConnectionAge": 86400,
+          "maxConnections": 10000,
+          "maxConnectionReuse": 5
+        },
+        "test001_app_2_svc_pool": {
+          "class": "Pool",
+          "monitors": [
+            "tcp",
+            "http"
+          ],
+          "loadBalancingMode": "least-connections-member",
+          "members": [
+            {
+              "servicePort": 80,
+              "serverAddresses": [
+                "192.0.1.14",
+                "192.0.1.15"
+              ]
+            }
+          ]
+        }
+      },
+      "test001_3": {
+        "class": "Application",
+        "template": "https",
+        "serviceMain": {
+          "class": "Service_HTTPS",
+          "virtualAddresses": [
+            "192.168.5.52"
+          ],
+          "snat": "self",
+          "virtualPort": 443,
+          "pool": "test001_app_3_svc_pool",
+          "serverTLS": "webtls"
+        },
+        "test001_app_3_svc_pool": {
+          "class": "Pool",
+          "monitors": [
+            "tcp"
+          ],
+          "loadBalancingMode": "least-connections-member",
+          "members": [
+            {
+              "servicePort": 80,
+              "serverAddresses": [
+                "192.0.1.16",
+                "192.0.1.17"
+              ]
+            }
+          ]
+        },
+        "webtls": {
+          "class": "TLS_Server",
+          "certificates": [
+            {
+              "certificate": "webcert"
+            }
+          ]
+        },
+        "webcert": {
+          "class": "Certificate",
+          "certificate": {
+            "bigip": "/Common/default.crt"
+          },
+          "privateKey": {
+            "bigip": "/Common/default.key"
+          }
+        }
+      }
+    },
+    "updateMode": "selective",
+    "controls": {
+      "archiveTimestamp": "2022-04-08T13:54:39.335Z"
+    }
+  }
+}
+----
+
+
+=== API GET
+
+[source, bash]
+----
+$ curl -s -k -u 'admin:F5demo@666'  -H "Content-Type: application/json" https://10.1.10.240/mgmt/shared/appsvcs/declare -X GET | jq
+{
+  "Sample_01": {
+    "class": "Tenant",
+    "A1": {
+      "class": "Application",
+      "template": "generic",
+      "service": {
+        "class": "Service_HTTP",
+        "virtualAddresses": [
+          "10.0.1.10"
+        ],
+        "pool": "web_pool"
+      },
+      "web_pool": {
+        "class": "Pool",
+        "monitors": [
+          "http"
+        ],
+        "members": [
+          {
+            "servicePort": 80,
+            "serverAddresses": [
+              "192.0.1.10",
+              "192.0.1.11"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "class": "ADC",
+  "schemaVersion": "3.18.0",
+  "id": "f5-bigip-confgimap",
+  "label": "f5-bigip-confgimap",
+  "test001": {
+    "class": "Tenant",
+    "test001_1": {
+      "class": "Application",
+      "template": "generic",
+      "app_svc_vs": {
+        "class": "Service_TCP",
+        "persistenceMethods": [
+          "source-address"
+        ],
+        "virtualAddresses": [
+          "192.168.5.50"
+        ],
+        "profileTCP": {
+          "use": "customTCPProfile"
+        },
+        "snat": "self",
+        "virtualPort": 80,
+        "mirroring": "L4",
+        "pool": "test001_app_1_svc_pool"
+      },
+      "customTCPProfile": {
+        "class": "TCP_Profile",
+        "idleTimeout": 600
+      },
+      "test001_app_1_svc_pool": {
+        "class": "Pool",
+        "monitors": [
+          "tcp"
+        ],
+        "loadBalancingMode": "least-connections-member",
+        "members": [
+          {
+            "servicePort": 80,
+            "serverAddresses": [
+              "192.0.1.12",
+              "192.0.1.13"
+            ]
+          }
+        ]
+      }
+    },
+    "test001_2": {
+      "class": "Application",
+      "template": "generic",
+      "app_svc_vs": {
+        "class": "Service_HTTP",
+        "persistenceMethods": [
+          "cookie"
+        ],
+        "virtualAddresses": [
+          "192.168.5.51"
+        ],
+        "profileHTTP": {
+          "use": "customHTTPProfile"
+        },
+        "profileMultiplex": {
+          "use": "custoOneConnectProfile"
+        },
+        "snat": "self",
+        "virtualPort": 80,
+        "pool": "test001_app_2_svc_pool"
+      },
+      "customHTTPProfile": {
+        "class": "HTTP_Profile",
+        "xForwardedFor": true
+      },
+      "custoOneConnectProfile": {
+        "class": "Multiplex_Profile",
+        "sourceMask": "255.255.255.255",
+        "maxConnectionAge": 86400,
+        "maxConnections": 10000,
+        "maxConnectionReuse": 5
+      },
+      "test001_app_2_svc_pool": {
+        "class": "Pool",
+        "monitors": [
+          "tcp",
+          "http"
+        ],
+        "loadBalancingMode": "least-connections-member",
+        "members": [
+          {
+            "servicePort": 80,
+            "serverAddresses": [
+              "192.0.1.14",
+              "192.0.1.15"
+            ]
+          }
+        ]
+      }
+    },
+    "test001_3": {
+      "class": "Application",
+      "template": "https",
+      "serviceMain": {
+        "class": "Service_HTTPS",
+        "virtualAddresses": [
+          "192.168.5.52"
+        ],
+        "snat": "self",
+        "virtualPort": 443,
+        "pool": "test001_app_3_svc_pool",
+        "serverTLS": "webtls"
+      },
+      "test001_app_3_svc_pool": {
+        "class": "Pool",
+        "monitors": [
+          "tcp"
+        ],
+        "loadBalancingMode": "least-connections-member",
+        "members": [
+          {
+            "servicePort": 80,
+            "serverAddresses": [
+              "192.0.1.16",
+              "192.0.1.17"
+            ]
+          }
+        ]
+      },
+      "webtls": {
+        "class": "TLS_Server",
+        "certificates": [
+          {
+            "certificate": "webcert"
+          }
+        ]
+      },
+      "webcert": {
+        "class": "Certificate",
+        "certificate": {
+          "bigip": "/Common/default.crt"
+        },
+        "privateKey": {
+          "bigip": "/Common/default.key"
+        }
+      }
+    }
+  },
+  "updateMode": "selective",
+  "controls": {
+    "archiveTimestamp": "2022-04-08T13:54:39.335Z"
+  }
+}
+----
+
+=== API DELETE
+
+[source, bash]
+----
+$ curl -s -k -u 'admin:F5demo@666'  -H "Content-Type: application/json" https://10.1.10.240/mgmt/shared/appsvcs/declare/Sample_01,test001_3 -X DELETE | jq
+{
+  "results": [
+    {
+      "code": 200,
+      "message": "success",
+      "lineCount": 23,
+      "host": "localhost",
+      "tenant": "Sample_01",
+      "runTime": 4431
+    },
+    {
+      "code": 200,
+      "message": "no change",
+      "host": "localhost",
+      "tenant": "test001_3",
+      "runTime": 69
+    }
+  ],
+  "declaration": {
+    "class": "ADC",
+    "schemaVersion": "3.0.0",
+    "id": "1649428507661",
+    "updateMode": "selective",
+    "controls": {
+      "archiveTimestamp": "2022-04-08T14:35:17.250Z"
+    }
+  }
+}
+----
+
+=== API PATCH
+
+[source, bash]
+----
+$ curl -s -k -u 'admin:F5demo@666'  -H "Content-Type: application/json" https://10.1.10.240/mgmt/shared/appsvcs/declare -X PATCH -d "$(cat update.json)" | jq
+{
+  "results": [
+    {
+      "code": 200,
+      "message": "success",
+      "lineCount": 19,
+      "host": "localhost",
+      "tenant": "test001",
+      "runTime": 1935
+    }
+  ],
+  "declaration": {
+    "test001": {
+      "class": "Tenant",
+      "test001_1": {
+        "class": "Application",
+        "template": "generic",
+        "app_svc_vs": {
+          "class": "Service_TCP",
+          "persistenceMethods": [
+            "source-address"
+          ],
+          "virtualAddresses": [
+            "192.168.5.50"
+          ],
+          "profileTCP": {
+            "use": "customTCPProfile"
+          },
+          "snat": "self",
+          "virtualPort": 80,
+          "mirroring": "L4",
+          "pool": "test001_app_1_svc_pool"
+        },
+        "customTCPProfile": {
+          "class": "TCP_Profile",
+          "idleTimeout": 600
+        },
+        "test001_app_1_svc_pool": {
+          "class": "Pool",
+          "monitors": [
+            "tcp"
+          ],
+          "loadBalancingMode": "least-connections-member",
+          "members": [
+            {
+              "servicePort": 80,
+              "serverAddresses": [
+                "192.0.1.12",
+                "192.0.1.13",
+                "10.1.2.3"
+              ]
+            }
+          ]
+        }
+      },
+      "test001_2": {
+        "class": "Application",
+        "template": "generic",
+        "app_svc_vs": {
+          "class": "Service_HTTP",
+          "persistenceMethods": [
+            "cookie"
+          ],
+          "virtualAddresses": [
+            "192.168.5.51"
+          ],
+          "profileHTTP": {
+            "use": "customHTTPProfile"
+          },
+          "profileMultiplex": {
+            "use": "custoOneConnectProfile"
+          },
+          "snat": "self",
+          "virtualPort": 80,
+          "pool": "test001_app_2_svc_pool"
+        },
+        "customHTTPProfile": {
+          "class": "HTTP_Profile",
+          "xForwardedFor": true
+        },
+        "custoOneConnectProfile": {
+          "class": "Multiplex_Profile",
+          "sourceMask": "255.255.255.255",
+          "maxConnectionAge": 86400,
+          "maxConnections": 10000,
+          "maxConnectionReuse": 5
+        },
+        "test001_app_2_svc_pool": {
+          "class": "Pool",
+          "monitors": [
+            "tcp",
+            "http"
+          ],
+          "loadBalancingMode": "least-connections-member",
+          "members": [
+            {
+              "servicePort": 80,
+              "serverAddresses": [
+                "192.0.1.14",
+                "192.0.1.15"
+              ]
+            }
+          ]
+        }
+      },
+      "test001_3": {
+        "class": "Application",
+        "template": "https",
+        "serviceMain": {
+          "class": "Service_HTTPS",
+          "virtualAddresses": [
+            "192.168.5.52"
+          ],
+          "snat": "self",
+          "virtualPort": 443,
+          "pool": "test001_app_3_svc_pool",
+          "serverTLS": "webtls"
+        },
+        "test001_app_3_svc_pool": {
+          "class": "Pool",
+          "monitors": [
+            "tcp"
+          ],
+          "loadBalancingMode": "least-connections-member",
+          "members": [
+            {
+              "servicePort": 80,
+              "serverAddresses": [
+                "192.0.1.16",
+                "192.0.1.17"
+              ]
+            }
+          ]
+        },
+        "webtls": {
+          "class": "TLS_Server",
+          "certificates": [
+            {
+              "certificate": "webcert"
+            }
+          ]
+        },
+        "webcert": {
+          "class": "Certificate",
+          "certificate": {
+            "bigip": "/Common/default.crt"
+          },
+          "privateKey": {
+            "bigip": "/Common/default.key"
+          }
+        }
+      }
+    },
+    "class": "ADC",
+    "schemaVersion": "3.0.0",
+    "id": "1649428935303",
+    "updateMode": "selective",
+    "controls": {
+      "archiveTimestamp": "2022-04-08T14:52:11.327Z"
+    }
+  }
+}
+----
+
+== Error Code
+
+[cols="2,5a"]
+|===
+|Code |Note
+
+|422
+|declaration is invalid
+
+restnoded.log warning pattern
+
+----
+warning: [appsvcs] {"status":422,"message":"declaration is invalid","errors":["/Sample_01/A1: should have required property 'template'"],"level":"warning"}
+----
+
+|===

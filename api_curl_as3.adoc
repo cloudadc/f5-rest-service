@@ -5,7 +5,7 @@
 
 [source, bash]
 ----
-$ curl -k -u 'admin:admin' -H "accept: application/json" https://10.1.1.133/mgmt/shared/appsvcs/info 
+$ curl -k -u 'admin:admin' -H "accept: application/json" https://10.1.10.240/mgmt/shared/appsvcs/info 
 {
   "version": "3.28.0",
   "release": "3",

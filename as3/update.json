@@ -1,0 +1,1 @@
+[{"op": "add", "path": "/test001/test001_1/test001_app_1_svc_pool/members/0/serverAddresses/-", "value": "10.1.2.3" }]

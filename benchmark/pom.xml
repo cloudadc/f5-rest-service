@@ -5,11 +5,11 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.9</version>
+		<version>2.7.12</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.github.cloudadc</groupId>
-	<artifactId>f5-rest-java-sdk</artifactId>
+	<artifactId>f5-rest-benchmark</artifactId>
 	<version>0.0.1</version>
 	<name>f5-rest-java-sdk</name>
 	<description>F5 iControlRest Java SDK</description>

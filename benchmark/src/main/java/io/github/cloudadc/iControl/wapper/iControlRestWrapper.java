@@ -24,6 +24,7 @@ import io.github.cloudadc.iControl.model.PoolsReference;
 import io.github.cloudadc.iControl.model.SnatPool;
 import io.github.cloudadc.iControl.model.SnatPoolReference;
 import io.github.cloudadc.iControl.model.Transaction;
+import io.github.cloudadc.iControl.model.TransactionCommandsReference;
 import io.github.cloudadc.iControl.model.TransactionReference;
 import io.github.cloudadc.iControl.model.VirtualServer;
 import io.github.cloudadc.iControl.model.VirtualServersReference;
@@ -227,13 +228,13 @@ public class iControlRestWrapper extends Wrapper{
 	}
 
 	@Override
-	public Object transactionRevoke(long id) {
-		return doDelete("/mgmt/tm/transaction/" + id, Object.class);
+	public Transaction transactionRevoke(long id) {
+		return doDelete("/mgmt/tm/transaction/" + id, Transaction.class);
 	}
 
 	@Override
-	public Object transactionCommit(long id) {
-		return doPatch("/mgmt/tm/transaction/" + id, "{\"state\":\"VALIDATING\"}", Object.class);
+	public Transaction transactionCommit(long id) {
+		return doPatch("/mgmt/tm/transaction/" + id, "{\"state\":\"VALIDATING\"}", Transaction.class);
 	}
 
 	@Override
@@ -493,6 +494,11 @@ public class iControlRestWrapper extends Wrapper{
 	@Override
 	public Object deleteSnatPool(String name, long transId) {
 		return doDelete("/mgmt/tm/ltm/snatpool/" + name, Object.class, transactionHeaders(transId));
+	}
+
+	@Override
+	public TransactionCommandsReference transactionCommands(long transId) {
+		return doGet("/mgmt/tm/transaction/" + transId + "/commands", TransactionCommandsReference.class);
 	}
 
 

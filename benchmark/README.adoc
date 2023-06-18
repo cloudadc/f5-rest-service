@@ -1,0 +1,120 @@
+curl -s -k -u 'admin:admin' -X PATCH https://10.1.1.133/mgmt/tm/l= REST TRANSACTION API
+
+[source, bash]
+.*Start*
+----
+$ curl -s -k -u 'admin:admin' -X POST https://10.1.1.133/mgmt/tm/transaction -H "Content-type: application/json" -d '{}' | jq
+{
+  "transId": 1687056639662166,
+  "state": "STARTED",
+  "timeoutSeconds": 120,
+  "asyncExecution": false,
+  "validateOnly": false,
+  "executionTimeout": 300,
+  "executionTime": 0,
+  "failureReason": "",
+  "kind": "tm:transactionstate",
+  "selfLink": "https://localhost/mgmt/tm/transaction/1687056639662166?ver=13.1.3"
+}
+----
+
+[source, bash]
+.*Get Transaction*
+----
+$ curl -s -k -u 'admin:admin' -X GET https://10.1.1.133/mgmt/tm/transaction/1687056639662166 | jq
+{
+  "transId": 1687056639662166,
+  "state": "STARTED",
+  "timeoutSeconds": 120,
+  "asyncExecution": false,
+  "validateOnly": false,
+  "executionTimeout": 300,
+  "executionTime": 0,
+  "failureReason": "",
+  "kind": "tm:transactionstate",
+  "selfLink": "https://localhost/mgmt/tm/transaction/1687056639662166?ver=13.1.3"
+}
+----
+
+[source, bash]
+.*Add Operation to Transaction*
+----
+curl -s -k -u 'admin:admin' -X PATCH https://10.1.1.133/mgmt/tm/ltm/node/10.1.20.1 -H "Content-type: application/json" -H "X-F5-REST-Coordination-Id: 1687056639662166" -d '{"session": "user-disabled"}'  | jq
+curl -s -k -u 'admin:admin' -X PATCH https://10.1.1.133/mgmt/tm/ltm/node/10.1.20.2 -H "Content-type: application/json" -H "X-F5-REST-Coordination-Id: 1687056639662166" -d '{"session": "user-disabled"}'  | jq
+----
+
+[source, bash]
+.*Get Transaction*
+----
+$ curl -s -k -u 'admin:admin' -X GET https://10.1.1.133/mgmt/tm/transaction/1687056639662166 | jq
+{
+  "transId": 1687056639662166,
+  "state": "UPDATING",
+  "timeoutSeconds": 120,
+  "asyncExecution": false,
+  "validateOnly": false,
+  "executionTimeout": 300,
+  "executionTime": 0,
+  "failureReason": "",
+  "kind": "tm:transactionstate",
+  "selfLink": "https://localhost/mgmt/tm/transaction/1687056639662166?ver=13.1.3"
+}
+----
+
+[source, bash]
+.*Get Transaction Commands*
+----
+$ curl -s -k -u 'admin:admin' -X GET https://10.1.1.133/mgmt/tm/transaction/1687056639662166/commands | jq
+{
+  "kind": "tm:transaction:commandscollectionstate",
+  "selfLink": "https://localhost/mgmt/tm/transaction/1687056639662166/commands?ver=13.1.3",
+  "items": [
+    {
+      "method": "PATCH",
+      "uri": "https://localhost/mgmt/tm/ltm/node/10.1.20.1",
+      "body": {
+        "session": "user-disabled"
+      },
+      "evalOrder": 1,
+      "commandId": 1,
+      "kind": "tm:transaction:commandsstate",
+      "selfLink": "https://localhost/mgmt/tm/transaction/1687056639662166/commands/1?ver=13.1.3"
+    },
+    {
+      "method": "PATCH",
+      "uri": "https://localhost/mgmt/tm/ltm/node/10.1.20.2",
+      "body": {
+        "session": "user-disabled"
+      },
+      "evalOrder": 2,
+      "commandId": 2,
+      "kind": "tm:transaction:commandsstate",
+      "selfLink": "https://localhost/mgmt/tm/transaction/1687056639662166/commands/2?ver=13.1.3"
+    }
+  ]
+}
+----
+
+[source, bash]
+.*Commit*
+----
+$ curl -s -k -u 'admin:admin' -X PATCH https://10.1.1.133/mgmt/tm/transaction/1687056639662166 -H "Content-type: application/json" -d '{"state":"VALIDATING"}' | jq
+{
+  "transId": 1687056639662166,
+  "state": "COMPLETED",
+  "timeoutSeconds": 120,
+  "asyncExecution": false,
+  "validateOnly": false,
+  "executionTimeout": 300,
+  "executionTime": 0,
+  "failureReason": "",
+  "kind": "tm:transactionstate",
+  "selfLink": "https://localhost/mgmt/tm/transaction/1687056639662166?ver=13.1.3"
+}
+----
+
+[source, bash]
+.*Start*
+----
+
+----

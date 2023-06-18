@@ -12,4 +12,11 @@ public class Transaction {
     public String failureReason;
     public String kind;
     public String selfLink;
+	@Override
+	public String toString() {
+		return "[transId=" + transId + ", state=" + state + ", timeoutSeconds=" + timeoutSeconds
+				+ ", asyncExecution=" + asyncExecution + ", validateOnly=" + validateOnly + ", executionTimeout="
+				+ executionTimeout + ", executionTime=" + executionTime + ", failureReason=" + failureReason + ", kind="
+				+ kind + "]";
+	}
 }

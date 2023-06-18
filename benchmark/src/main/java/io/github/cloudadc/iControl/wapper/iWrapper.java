@@ -16,6 +16,7 @@ import io.github.cloudadc.iControl.model.PoolsReference;
 import io.github.cloudadc.iControl.model.SnatPool;
 import io.github.cloudadc.iControl.model.SnatPoolReference;
 import io.github.cloudadc.iControl.model.Transaction;
+import io.github.cloudadc.iControl.model.TransactionCommandsReference;
 import io.github.cloudadc.iControl.model.TransactionReference;
 import io.github.cloudadc.iControl.model.VirtualServer;
 import io.github.cloudadc.iControl.model.VirtualServersReference;
@@ -252,10 +253,13 @@ public interface iWrapper {
 	public Transaction transactionStatus(long transId);
 
 	@iType(category = LTM, type = PATCH, description = "remove transaction from internal DB")
-	public Object transactionRevoke(long transId);
+	public Transaction transactionRevoke(long transId);
 
 	@iType(category = LTM, type = PATCH)
-	public Object transactionCommit(long transId);
+	public Transaction transactionCommit(long transId);
+	
+	@iType(category = LTM, type = GET)
+	public TransactionCommandsReference transactionCommands(long transId);
 
 	@iType(category = LTM, type = GET)
 	public TransactionReference listAllTransaction();

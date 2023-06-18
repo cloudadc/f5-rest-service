@@ -93,8 +93,7 @@ public abstract class Wrapper implements iWrapper {
 	}
 
 	protected void println(String msg) {
-		System.out.println(msg);
-		logger.debug(msg);
+		logger.info(msg);
 	}
 
 	protected <T> T doGet(String url, Class<T> valueType) {
@@ -135,7 +134,7 @@ public abstract class Wrapper implements iWrapper {
 		});
 		request.setEntity(new StringEntity(payload, ContentType.APPLICATION_JSON));
 
-		//println(request.toString() + " payload: " + payload);
+		println(request.toString() + " payload: " + payload);
 
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {
@@ -162,7 +161,7 @@ public abstract class Wrapper implements iWrapper {
 		});
 		request.setEntity(new StringEntity(payload, ContentType.APPLICATION_JSON));
 
-		//println(request.toString() + " payload: " + payload);
+		println(request.toString() + " payload: " + payload);
 
 		try {
 			try(CloseableHttpResponse response = client.execute(request)) {

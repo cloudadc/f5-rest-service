@@ -19,4 +19,9 @@ public class Node {
     public int ratio;
     public String session;
     public String state;
+    
+	@Override
+	public String toString() {
+		return "[name=" + name + ", address=" + address + ", session=" + session + ", state=" + state + "]";
+	}
 }

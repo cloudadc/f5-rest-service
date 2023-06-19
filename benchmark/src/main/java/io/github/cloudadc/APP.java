@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import io.github.cloudadc.iControl.config.Config;
+import io.github.cloudadc.iControl.config.ConfigBuilder;
 import io.github.cloudadc.iControl.model.MembersReference;
 import io.github.cloudadc.iControl.model.Transaction;
 import io.github.cloudadc.iControl.model.TransactionCommandsReference;
@@ -15,12 +17,6 @@ import io.github.cloudadc.iControl.wapper.Wrapper;
 @SpringBootApplication
 public class APP implements CommandLineRunner {
 
-	static String HOST = "10.1.1.133";
-
-	static String USER = "admin";
-
-	//static String PASSWORD = "F5survive@123";
-	static String PASSWORD = "admin";
 
 	public static void main(String[] args) {
 		//args = new String[] {"debug"};
@@ -29,10 +25,12 @@ public class APP implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
-		Wrapper w = Wrapper.create(HOST, USER, PASSWORD);
 		
-		if(args.length > 0 && args[0].equals("debug")) {
+		Config config = ConfigBuilder.instance().load(args).build();
+
+		Wrapper w = Wrapper.create(config.getHost(), config.getUser(), config.getPassword());
+		
+		if(args.length > 0 && args[0].equals("debug") ) {
 			transaction_debug(w);
 		} else {
                         Thread.sleep(5000);
@@ -63,6 +61,10 @@ public class APP implements CommandLineRunner {
 		t = w.transactionCommit(t.transId);
 		
 		System.out.println(t);
+		
+		System.out.println(w.getNodeByName("10.1.20.1"));
+		System.out.println(w.getNodeByName("10.1.20.2"));
+		
 	}
 
 	void operation_without_transaction(Wrapper w) {
